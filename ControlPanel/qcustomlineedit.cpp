@@ -32,6 +32,7 @@ void QCustomLineEdit::keyPressEvent(QKeyEvent * event)
     if(event->key() == Qt::Key_Left) {
         QKeyEvent qev(QEvent::KeyPress, Qt::Key_Backspace,Qt::NoModifier);
         QLineEdit::keyPressEvent(&qev);
+    } else if (event->key() == Qt::Key_Up) {
     } else {
         QLineEdit::keyPressEvent(event);
     }

@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "statethread.h"
+
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -20,18 +22,28 @@ protected:
     void keyPressEvent(QKeyEvent *event);
 
 private:
+    enum WIDGET_ID {
+        WIDGET_GET_PASS = 0,
+        WIDGET_MOUNT_SERIAL,
+        WIDGET_MAIN,
+        WIDGET_MOUNT_IMAGE,
+        WIDGET_MOUNT_NIC,
+        WIDGET_MOUNT_PART,
+        WIDGET_SELECT_IMAGE,
+        WIDGET_WAIT
+    };
+
     void initilizeUI();
-    void showWidgetGetPass(bool show = true);
-    void showWidgetMountSerial(bool show = true);
-    void showWidgetMain(bool show = true);
-    void showWidgetMountImage(bool show = true);
-    void showWidgetMountNic(bool show = true);
-    void showWidgetMountPart(bool show = true);
-    void showWidgetSelectImage(bool show = true);
-    void showWidgetWait(bool show = true);
-    void threadFinised();
+
+    void showWidegt(WIDGET_ID id);
+
+    void prepareDeviceDone();
+    void mountPartationDone();
+    void mountSerialDone();
+    void mountNicDone();
+
     Ui::MainWindow *ui;
     QWidget * currentInterface;
-    QThread * currentThread;
+    StateThread * currentThread;
 };
 #endif // MAINWINDOW_H

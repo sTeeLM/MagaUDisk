@@ -23,17 +23,23 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centalwidget">
-   <widget class="QWidget" name="widgetMain" native="true">
+   <property name="focusPolicy">
+    <enum>Qt::StrongFocus</enum>
+   </property>
+   <widget class="QCustomRadioGroup" name="widgetMain" native="true">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>0</width>
-      <height>0</height>
+      <width>130</width>
+      <height>130</height>
      </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
     </property>
     <widget class="QRadioButton" name="radioButtonSelectImage">
      <property name="geometry">
@@ -156,6 +162,9 @@
       <height>0</height>
      </rect>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
+    </property>
    </widget>
    <widget class="QWidget" name="widgetMountPart" native="true">
     <property name="enabled">
@@ -169,8 +178,11 @@
       <height>0</height>
      </rect>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
+    </property>
    </widget>
-   <widget class="QWidget" name="widgeMountSerial" native="true">
+   <widget class="QWidget" name="widgetMountSerial" native="true">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -181,6 +193,9 @@
       <width>0</width>
       <height>0</height>
      </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
     </property>
    </widget>
    <widget class="QWidget" name="widgetSelectImage" native="true">
@@ -195,6 +210,9 @@
       <height>0</height>
      </rect>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
+    </property>
    </widget>
    <widget class="QWidget" name="widgetMountNic" native="true">
     <property name="enabled">
@@ -208,6 +226,9 @@
       <height>0</height>
      </rect>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
+    </property>
    </widget>
    <widget class="QWidget" name="widgetGetPass" native="true">
     <property name="geometry">
@@ -218,7 +239,7 @@
       <height>0</height>
      </rect>
     </property>
-    <widget class="QCustomLineEdit" name="lineEdit" native="true">
+    <widget class="QCustomLineEdit" name="lineEditPassword" native="true">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -258,7 +279,7 @@
       <string>输入密码</string>
      </property>
     </widget>
-    <widget class="QLabel" name="labelInfo">
+    <widget class="QLabel" name="labelPasswordInfo">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -286,9 +307,12 @@ Press:确认</string>
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>130</width>
-      <height>130</height>
+      <width>0</width>
+      <height>0</height>
      </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
     </property>
     <widget class="QLabel" name="labelWaitInfo">
      <property name="geometry">
@@ -311,6 +335,11 @@ Press:确认</string>
    <class>QCustomLineEdit</class>
    <extends>QWidget</extends>
    <header>qcustomlineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QCustomRadioGroup</class>
+   <extends>QWidget</extends>
+   <header>qcustomradiogroup.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

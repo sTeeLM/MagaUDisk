@@ -24,7 +24,7 @@ public:
         return dstDevicePath;
     }
 
-    void setEncrypted(QString & pass) {
+    void setEncrypted(const QString & pass) {
         isEncrypted = true;
         strPassword = pass;
     }

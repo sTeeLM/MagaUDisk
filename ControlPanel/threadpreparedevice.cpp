@@ -12,6 +12,7 @@ ThreadPrepareDevice::ThreadPrepareDevice(QObject *parent)
 
 void ThreadPrepareDevice::run()
 {
-    QThread::sleep(10);
+    QThread::sleep(5);
     setOK();
+    //setFailed(StateThread::WRONG_PASS, QString(tr("密码错误")));
 }

@@ -15,7 +15,11 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     qcustomlineedit.cpp \
+    qcustomradiogroup.cpp \
     statethread.cpp \
+    threadmountnic.cpp \
+    threadmountpartation.cpp \
+    threadmountserial.cpp \
     threadpreparedevice.cpp
 
 HEADERS += \
@@ -23,7 +27,11 @@ HEADERS += \
     controlpanelconfig.h \
     mainwindow.h \
     qcustomlineedit.h \
+    qcustomradiogroup.h \
     statethread.h \
+    threadmountnic.h \
+    threadmountpartation.h \
+    threadmountserial.h \
     threadpreparedevice.h
 
 FORMS += \

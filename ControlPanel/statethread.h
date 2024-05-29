@@ -12,6 +12,7 @@ public:
 public:
     enum FINISH_STATE {
       OK = 0,
+      WRONG_PASS,
       FAILED
     };
 
@@ -20,10 +21,22 @@ public:
     {
         state = OK;
     }
-    void setFailed(QString & str)
+    void setFailed(FINISH_STATE s, const QString & str)
     {
         strState = str;
-        state = FAILED;
+        state = s;
+    }
+    bool isOK()
+    {
+        return state == OK;
+    }
+    QString & getStateString()
+    {
+        return strState;
+    }
+    FINISH_STATE getState()
+    {
+        return state;
     }
 private:
     QString strState;
