@@ -1,0 +1,23 @@
+#include "mainwindow.h"
+
+#include "controlapplication.h""
+#include <QLocale>
+#include <QTranslator>
+
+int main(int argc, char *argv[])
+{
+    ControlApplication a(argc, argv);
+
+    QTranslator translator;
+    const QStringList uiLanguages = QLocale::system().uiLanguages();
+    for (const QString &locale : uiLanguages) {
+        const QString baseName = "ControlPanel_" + QLocale(locale).name();
+        if (translator.load(":/i18n/" + baseName)) {
+            a.installTranslator(&translator);
+            break;
+        }
+    }
+    MainWindow w;
+    w.show();
+    return a.exec();
+}
