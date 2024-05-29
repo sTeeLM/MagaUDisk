@@ -10,7 +10,10 @@ public:
     explicit ControlPanelConfig(QObject *parent = nullptr);
 
 public:
-    bool loadConfig();
+    // 装载配置和保存状态
+    void loadConfigAndState();
+
+    bool isEncryptPart();
 
 private:
 

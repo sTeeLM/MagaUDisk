@@ -22,12 +22,16 @@ protected:
 private:
     void initilizeUI();
     void showWidgetGetPass(bool show = true);
-    void showWidgeMountSerial(bool show = true);
+    void showWidgetMountSerial(bool show = true);
     void showWidgetMain(bool show = true);
     void showWidgetMountImage(bool show = true);
     void showWidgetMountNic(bool show = true);
     void showWidgetMountPart(bool show = true);
     void showWidgetSelectImage(bool show = true);
+    void showWidgetWait(bool show = true);
+    void threadFinised();
     Ui::MainWindow *ui;
+    QWidget * currentInterface;
+    QThread * currentThread;
 };
 #endif // MAINWINDOW_H

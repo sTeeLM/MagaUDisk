@@ -214,8 +214,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>130</width>
-      <height>130</height>
+      <width>0</width>
+      <height>0</height>
      </rect>
     </property>
     <widget class="QCustomLineEdit" name="lineEdit" native="true">
@@ -278,6 +278,29 @@
 字符a/b/c
 &lt;-:回退
 Press:确认</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="widgetWait" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>130</width>
+      <height>130</height>
+     </rect>
+    </property>
+    <widget class="QLabel" name="labelWaitInfo">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>请等待</string>
      </property>
     </widget>
    </widget>

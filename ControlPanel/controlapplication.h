@@ -11,7 +11,6 @@ class ControlApplication : public QApplication
     Q_OBJECT
 public:
     ControlApplication(int argc, char ** argv);
-private:
     ControlPanelConfig config;
 };
 

@@ -14,13 +14,17 @@ SOURCES += \
     controlpanelconfig.cpp \
     main.cpp \
     mainwindow.cpp \
-    qcustomlineedit.cpp
+    qcustomlineedit.cpp \
+    statethread.cpp \
+    threadpreparedevice.cpp
 
 HEADERS += \
     controlapplication.h \
     controlpanelconfig.h \
     mainwindow.h \
-    qcustomlineedit.h
+    qcustomlineedit.h \
+    statethread.h \
+    threadpreparedevice.h
 
 FORMS += \
     mainwindow.ui

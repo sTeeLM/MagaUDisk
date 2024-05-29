@@ -1,11 +1,15 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "controlapplication.h"
+#include "threadpreparedevice.h"
 
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , currentInterface(nullptr)
+    , currentThread(nullptr)
 {
     ui->setupUi(this);
     initilizeUI();
@@ -18,9 +22,23 @@ MainWindow::~MainWindow()
 }
 
 
+void MainWindow::threadFinised()
+{
+    qDebug()<<tr("MainWindow::threadFinised");
+    delete currentThread;
+    currentThread = nullptr;
+}
+
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    qDebug() << tr("MainWindow::keyPressEvent");
+    if(currentInterface == nullptr)
+        return;
+    qDebug() << tr("MainWindow::keyPressEvent") << currentInterface->objectName();
+
+    if(currentInterface->objectName() == QString(tr("widgetGetPass"))) {
+
+
+    }
 }
 
 void MainWindow::initilizeUI()
@@ -34,15 +52,25 @@ void MainWindow::initilizeUI()
     ui->widgetMountPart->resize(130,130);
     ui->widgetSelectImage->resize(130,130);
 
-    showWidgetGetPass(true);
-    showWidgeMountSerial(false);
-    showWidgetMain(false);
+    showWidgetMountSerial(false);
     showWidgetMountImage(false);
     showWidgetMountNic(false);
     showWidgetMountPart(false);
     showWidgetSelectImage(false);
+    showWidgetGetPass(false);
+    showWidgetMain(false);
 
-
+    if((qobject_cast<ControlApplication *>qApp)->config.isEncryptPart()) {
+        showWidgetGetPass(true);
+        currentInterface = ui->widgetGetPass;
+    } else {
+        ui->labelWaitInfo->setText(tr("正在准备分区"));
+        showWidgetWait();
+        currentInterface = ui->widgetWait;
+        currentThread = new ThreadPrepareDevice;
+        connect(currentThread, &QThread::finished, this, &MainWindow::threadFinised);
+        currentThread->start();
+    }
 }
 
 void MainWindow::showWidgetGetPass(bool show)
@@ -51,7 +79,7 @@ void MainWindow::showWidgetGetPass(bool show)
     ui->widgetGetPass->setVisible(show);
 }
 
-void MainWindow::showWidgeMountSerial(bool show)
+void MainWindow::showWidgetMountSerial(bool show)
 {
     ui->widgeMountSerial->setEnabled(show);
     ui->widgeMountSerial->setVisible(show);
@@ -85,4 +113,10 @@ void MainWindow::showWidgetSelectImage( bool show)
 {
     ui->widgetSelectImage->setEnabled(show);
     ui->widgetSelectImage->setVisible(show);
+}
+
+void MainWindow::showWidgetWait(bool show)
+{
+    ui->widgetWait->setEnabled(show);
+    ui->widgetWait->setVisible(show);
 }
