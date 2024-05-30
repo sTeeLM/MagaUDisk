@@ -1,11 +1,10 @@
 #include "threadpreparedevice.h"
 
-ThreadPrepareDevice::ThreadPrepareDevice(QObject *parent)
-    :StateThread(parent)
+ThreadPrepareDevice::ThreadPrepareDevice(QObject *parent, const QString & password)
+    :StateThreadBase(parent)
     ,srcDevicePath(tr(""))
     ,dstDevicePath(tr(""))
-    ,strPassword(tr(""))
-    ,isEncrypted(false)
+    ,strPassword(password)
 {
 
 }
@@ -13,6 +12,6 @@ ThreadPrepareDevice::ThreadPrepareDevice(QObject *parent)
 void ThreadPrepareDevice::run()
 {
     QThread::sleep(5);
-    setOK();
+    setStateOK();
     //setFailed(StateThread::WRONG_PASS, QString(tr("密码错误")));
 }

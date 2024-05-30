@@ -1,5 +1,5 @@
 #include "threadmountpartation.h"
 
-ThreadMountPartation::ThreadMountPartation(QObject *parent)
-    : StateThread{parent}
+ThreadMountPartation::ThreadMountPartation(QObject *parent, bool isMount)
+    : StateThreadMount(parent, isMount)
 {}

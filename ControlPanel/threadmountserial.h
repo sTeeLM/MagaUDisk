@@ -2,13 +2,13 @@
 #define THREADMOUNTSERIAL_H
 
 #include <QObject>
-#include "statethread.h"
+#include "statethreadmount.h"
 
-class ThreadMountSerial : public StateThread
+class ThreadMountSerial : public StateThreadMount
 {
     Q_OBJECT
 public:
-    explicit ThreadMountSerial(QObject *parent = nullptr);
+    explicit ThreadMountSerial(QObject *parent = nullptr, bool isMount = true);
 };
 
 #endif // THREADMOUNTSERIAL_H

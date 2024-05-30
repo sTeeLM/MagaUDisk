@@ -12,7 +12,3 @@ void ControlPanelConfig::loadConfigAndState()
 
 }
 
-bool ControlPanelConfig::isEncryptPart()
-{
-    return false;
-}

@@ -1,9 +1,9 @@
-#include "qcustomradiogroup.h"
+#include "radiogroup.h"
 
 #include <QRadioButton>
 #include <QDebug>
 
-QCustomRadioGroup::QCustomRadioGroup(QWidget *parent)
+RadioGroup::RadioGroup(QWidget *parent)
     : QWidget(parent)
     , mainFunctionGroup(this)
 {
@@ -11,7 +11,7 @@ QCustomRadioGroup::QCustomRadioGroup(QWidget *parent)
 }
 
 
-void QCustomRadioGroup::keyPressEvent(QKeyEvent *event)
+void RadioGroup::keyPressEvent(QKeyEvent *event)
 {
     int index = mainFunctionGroup.checkedId();
     int count = mainFunctionGroup.buttons().size();
@@ -33,14 +33,13 @@ void QCustomRadioGroup::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void QCustomRadioGroup::InitilizeButtonGroup()
+void RadioGroup::InitilizeButtonGroup()
 {
 
     mainFunctionGroup.addButton(findChild<QRadioButton *>("radioButtonSelectImage"), 0);
     mainFunctionGroup.addButton(findChild<QRadioButton *>("radioButtonMountPart"), 1);
     mainFunctionGroup.addButton(findChild<QRadioButton *>("radioButtonMountSerial"), 2);
     mainFunctionGroup.addButton(findChild<QRadioButton *>("radioButtonMountNic"), 3);
-    mainFunctionGroup.addButton(findChild<QRadioButton *>("radioButtonSetPasswd"), 4);
-    mainFunctionGroup.addButton(findChild<QRadioButton *>("radioButtonMisc"), 5);
+    mainFunctionGroup.addButton(findChild<QRadioButton *>("radioButtonChangePassword"), 4);
     mainFunctionGroup.setExclusive(true);
 }

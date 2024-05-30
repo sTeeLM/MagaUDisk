@@ -1,5 +1,5 @@
-#ifndef QCUSTOMRADIOGROUP_H
-#define QCUSTOMRADIOGROUP_H
+#ifndef RADIOGROUP_H
+#define RADIOGROUP_H
 
 
 #include <QObject>
@@ -7,11 +7,11 @@
 #include <QButtonGroup>
 #include <QKeyEvent>
 
-class QCustomRadioGroup : public QWidget
+class RadioGroup : public QWidget
 {
     Q_OBJECT
 public:
-    explicit QCustomRadioGroup(QWidget *parent = nullptr);
+    explicit RadioGroup(QWidget *parent = nullptr);
     void keyPressEvent(QKeyEvent *event);
     void InitilizeButtonGroup();
 public:
@@ -19,4 +19,4 @@ public:
 signals:
 };
 
-#endif // QCUSTOMRADIOGROUP_H
+#endif // RADIOGROUP_H

@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "statethread.h"
+#include "statethreadbase.h"
 
 #include <QMainWindow>
 
@@ -21,8 +21,9 @@ public:
 protected:
     void keyPressEvent(QKeyEvent *event);
 
-private:
+public:
     enum WIDGET_ID {
+        WIDGET_NONE = -1,
         WIDGET_GET_PASS = 0,
         WIDGET_MOUNT_SERIAL,
         WIDGET_MAIN,
@@ -30,20 +31,26 @@ private:
         WIDGET_MOUNT_NIC,
         WIDGET_MOUNT_PART,
         WIDGET_SELECT_IMAGE,
-        WIDGET_WAIT
+        WIDGET_WAIT,
+        WIDGET_CHANGE_PASSWORD,
+        WIDGET_RESULT
     };
 
+private:
     void initilizeUI();
 
-    void showWidegt(WIDGET_ID id);
+    void showWidegt(WIDGET_ID id, WIDGET_ID idJump = WIDGET_NONE);
 
+    void listImageDone();
     void prepareDeviceDone();
     void mountPartationDone();
     void mountSerialDone();
     void mountNicDone();
+    void mountImageDone();
+    void changePasswordDone();
 
     Ui::MainWindow *ui;
     QWidget * currentInterface;
-    StateThread * currentThread;
+    StateThreadBase * currentThread;
 };
 #endif // MAINWINDOW_H

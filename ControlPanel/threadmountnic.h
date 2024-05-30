@@ -2,13 +2,13 @@
 #define THREADMOUNTNIC_H
 
 #include <QObject>
-#include "statethread.h"
+#include "statethreadmount.h"
 
-class ThreadMountNic : public StateThread
+class ThreadMountNic : public StateThreadMount
 {
     Q_OBJECT
 public:
-    explicit ThreadMountNic(QObject *parent = nullptr);
+    explicit ThreadMountNic(QObject *parent = nullptr, bool isMount = true);
 };
 
 #endif // THREADMOUNTNIC_H

@@ -1,16 +1,16 @@
 #ifndef THREADPREPAREDEVICE_H
 #define THREADPREPAREDEVICE_H
 
-#include "statethread.h"
+#include "statethreadbase.h"
 
 #include <QObject>
 #include <QThread>
 
-class ThreadPrepareDevice : public StateThread
+class ThreadPrepareDevice : public StateThreadBase
 {
     Q_OBJECT
 public:
-    explicit ThreadPrepareDevice(QObject *parent = nullptr);
+    explicit ThreadPrepareDevice(QObject *parent, const QString & password);
 
 public:
     void setSrcDevicePath(QString & src) {
@@ -24,21 +24,10 @@ public:
         return dstDevicePath;
     }
 
-    void setEncrypted(const QString & pass) {
-        isEncrypted = true;
-        strPassword = pass;
-    }
-
-    bool isEncryped() {
-        return isEncrypted;
-    }
-
 private:
     // 分区文件
     QString srcDevicePath;
-    // loop设备或者是map设备，取决于是否是加密的
     QString dstDevicePath;
-    bool    isEncrypted;
     QString strPassword;
     void run();
 };

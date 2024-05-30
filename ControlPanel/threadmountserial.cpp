@@ -1,5 +1,5 @@
 #include "threadmountserial.h"
 
-ThreadMountSerial::ThreadMountSerial(QObject *parent)
-    : StateThread{parent}
+ThreadMountSerial::ThreadMountSerial(QObject *parent, bool isMount)
+    : StateThreadMount(parent, isMount)
 {}

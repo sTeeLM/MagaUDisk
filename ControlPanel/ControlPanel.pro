@@ -10,29 +10,43 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    controlapplication.cpp \
+    controlpanelapplication.cpp \
     controlpanelconfig.cpp \
     main.cpp \
     mainwindow.cpp \
-    qcustomlineedit.cpp \
-    qcustomradiogroup.cpp \
-    statethread.cpp \
+    passwordedit.cpp \
+    radiogroup.cpp \
+    statethreadbase.cpp \
+    statethreadmount.cpp \
+    threadchangepassword.cpp \
+    threadlistimage.cpp \
+    threadmountimage.cpp \
     threadmountnic.cpp \
     threadmountpartation.cpp \
     threadmountserial.cpp \
-    threadpreparedevice.cpp
+    threadpreparedevice.cpp \
+    widgetchangepassword.cpp \
+    widgetresult.cpp \
+    widgetselectimage.cpp
 
 HEADERS += \
-    controlapplication.h \
+    controlpanelapplication.h \
     controlpanelconfig.h \
     mainwindow.h \
-    qcustomlineedit.h \
-    qcustomradiogroup.h \
-    statethread.h \
+    passwordedit.h \
+    radiogroup.h \
+    statethreadbase.h \
+    statethreadmount.h \
+    threadchangepassword.h \
+    threadlistimage.h \
+    threadmountimage.h \
     threadmountnic.h \
     threadmountpartation.h \
     threadmountserial.h \
-    threadpreparedevice.h
+    threadpreparedevice.h \
+    widgetchangepassword.h \
+    widgetresult.h \
+    widgetselectimage.h
 
 FORMS += \
     mainwindow.ui
