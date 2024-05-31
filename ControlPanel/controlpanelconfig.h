@@ -11,10 +11,28 @@ public:
 
 public:
     // 装载配置和保存状态
-    void loadConfigAndState();
+    void loadConfig(const QString & config);
+
+    const QString & getSourcePartation()
+    {
+        return sourcePartation;
+    }
+
+    const QString & getIconFolder()
+    {
+        return iconFolder;
+    }
+
+    const QString & getMountRoot()
+    {
+        return mountRoot;
+    }
 
 private:
 
+    QString sourcePartation;
+    QString iconFolder;
+    QString mountRoot;
 
 signals:
 };
