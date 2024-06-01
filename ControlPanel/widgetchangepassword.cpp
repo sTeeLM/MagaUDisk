@@ -10,9 +10,10 @@ WidgetChangePassword::WidgetChangePassword(QWidget *parent)
 
 void WidgetChangePassword::keyPressEvent(QKeyEvent *event)
 {
-    qDebug() << tr("WidgetChangePassword::keyPressEvent");
     QLineEdit * p[3];
     int focus = 0;
+
+    qDebug() << tr("WidgetChangePassword::keyPressEvent");
 
     p[0] = findChild<QLineEdit *>("lineEditOldPassword");
     p[1] = findChild<QLineEdit *>("lineEditNewPassword");

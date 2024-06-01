@@ -15,6 +15,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     passwordedit.cpp \
+    processcommander.cpp \
     radiogroup.cpp \
     statethreadbase.cpp \
     statethreadmount.cpp \
@@ -34,6 +35,7 @@ HEADERS += \
     controlpanelconfig.h \
     mainwindow.h \
     passwordedit.h \
+    processcommander.h \
     radiogroup.h \
     statethreadbase.h \
     statethreadmount.h \

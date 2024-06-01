@@ -1,8 +1,9 @@
 #include "controlpanelapplication.h"
 #include "threadpreparedevice.h"
+#include "processcommander.h"
 
+#include <QDebug>
 #include <QApplication>
-#include <QProcess>
 #include <QStringList>
 
 ThreadPrepareDevice::ThreadPrepareDevice(QObject *parent, const QString & password)
@@ -14,25 +15,19 @@ ThreadPrepareDevice::ThreadPrepareDevice(QObject *parent, const QString & passwo
 
 void ThreadPrepareDevice::run()
 {
-    QProcess process(this);
-    QStringList args;
-    QString cmd = tr("cryptsetup");
-    ControlPanelApplication * app = qobject_cast<ControlPanelApplication *>(qApp);
+    ProcessCommander process;
+    QStringList args, env;
 
-    args.append("luksOpen");
-    args.append(app->config.getSourcePartation());
-    args.append("ControlPanel");
+    args.append(tr("-la"));
+    env.append(tr("PATH=/usr/bin:/usr/sbin"));
+    process.setProgram(tr("ls"));
+    process.setArguments(args);
+    process.setEnvironment(env);
 
-    process.start(cmd, args);
-    process.write(strPassword.toLocal8Bit());
+    process.start();
 
-    while(!process.waitForFinished(1000)) {
-        QByteArray stdout = process.readAllStandardOutput();
-        QString strStdout = QString::fromLocal8Bit(stdout);
-        qDebug() << tr("stdout: %1").arg(strStdout);
-        if(strStdout == QString(tr("No key available with this passphrase."))) {
+    QString stdout = tr("总计");
+    int ret = process.waitForConditions(stdout, {}, WAIT_MASK_STATUS|WAIT_MASK_STDOUT);
 
-        }
-    }
-
+    process.clean();
 }
