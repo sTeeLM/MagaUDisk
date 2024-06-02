@@ -325,6 +325,9 @@ bool ProcessCommander::checkTimeout(
             timeoutMS -= diffMs;
             return false;
         }
+    } else {
+       /* should not be here ..., clock sync ? */
+       return false;
     }
     return true;
 }
