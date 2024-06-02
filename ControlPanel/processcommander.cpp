@@ -1,10 +1,12 @@
 #include "processcommander.h"
 #include <QProcess>
 #include <QDebug>
+#include <QRegExp>
 
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/select.h>
+#include <sys/time.h>
 #include <signal.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -29,8 +31,9 @@ ProcessCommander::ProcessCommander(QObject *parent)
     , childPid(-1)
     , fdPid(-1)
     , stdinBuffer("")
-    , exitStatusSignal(0)
+    , exitStatusSignal(0)    
     , processStatus(PROCESS_STATUS_EXIT)
+    , lastError("")
 {
 
 }
@@ -81,28 +84,28 @@ void ProcessCommander::FreeCharPP(char ** p)
     }
 }
 
-void ProcessCommander::ReadAppend(int fd, QByteArray & strList)
+bool ProcessCommander::ReadAppend(int fd, QByteArray & strList)
 {
     char buffer[128];
     ssize_t ret = -1;
+    bool retVal = false;
     do {
-        ret = ::read(fd, buffer, sizeof(buffer));
+        ret = ::read(fd, buffer, sizeof(buffer) - 1);
         if(ret > 0) {
+            buffer[ret] = 0;
             strList.append(buffer, ret);
+            retVal = true;
         }
     }while(ret > 0);
+    return retVal;
 }
 
-bool ProcessCommander::ReadAppendMatchLastLine(int fd, QByteArray & strList, const QString & str)
+bool ProcessCommander::Match(QByteArray & strList, const QString & str)
 {
-    ReadAppend(fd, strList);
+    bool retVal = false;
     QString strBuffer = QString::fromLocal8Bit(strList);
-    int lastLineBegin = strBuffer.lastIndexOf(QChar('\n'));
-    if(strBuffer.length() && lastLineBegin == -1) { /* only line*/
-        return strBuffer.indexOf(str) != -1;
-    } else {
-        return strBuffer.indexOf(str, lastLineBegin) != -1;
-    }
+    retVal =  strBuffer.indexOf(QRegExp(str)) != -1;
+    return retVal;
 }
 
 void ProcessCommander::WriteAppend(int fd, QByteArray & toWrite, QByteArray & strList)
@@ -116,6 +119,14 @@ void ProcessCommander::WriteAppend(int fd, QByteArray & toWrite, QByteArray & st
             toWrite = toWrite.right(length - ret);
         }
     }
+}
+
+void ProcessCommander::updateLastError()
+{
+    char buffer[1024];
+    ::strerror_r(errno, buffer, sizeof(buffer));
+    buffer[sizeof(buffer) - 1] = 0;
+    lastError.fromLocal8Bit(buffer);
 }
 
 bool ProcessCommander::start()
@@ -140,13 +151,31 @@ bool ProcessCommander::start()
     }
 
     /* create 3 pipe pair */
-    if(::pipe2(pipeStdin, O_NONBLOCK) != 0) {
+    if(::pipe(pipeStdin) != 0) {
         goto err;
     }
-    if(::pipe2(pipeStdout, O_NONBLOCK) != 0) {
+
+    if(fcntl(pipeStdin[1], F_SETFL, O_NONBLOCK | fcntl(pipeStdin[1], F_GETFL, 0)) < 0) {
         goto err;
     }
-    if(::pipe2(pipeStderr, O_NONBLOCK) != 0) {
+
+    if(::pipe(pipeStdout) != 0) {
+        goto err;
+    }
+
+    if(fcntl(pipeStdout[0], F_SETFL, O_NONBLOCK | fcntl(pipeStdout[0], F_GETFL, 0)) < 0) {
+        goto err;
+    }
+
+    if(::pipe(pipeStderr) != 0) {
+        goto err;
+    }
+
+    if(fcntl(pipeStderr[0], F_SETFL, O_NONBLOCK | fcntl(pipeStderr[0], F_GETFL, 0)) < 0) {
+        goto err;
+    }
+
+    if(::signal(SIGPIPE, SIG_IGN) == SIG_ERR) {
         goto err;
     }
 
@@ -199,6 +228,7 @@ bool ProcessCommander::start()
     }
 err:
     if(!retVal) {
+        updateLastError();
         if(pipeStdin[0] >= 0)
             ::close(pipeStdin[0]);
         if(pipeStdin[1] >= 0)
@@ -261,23 +291,42 @@ void ProcessCommander::UpdateWaitStatus()
     pid_t wait;
     int status;
 
-    if(processStatus == PROCESS_STATUS_STOP
-            || processStatus == PROCESS_STATUS_RUNNING) {
-        wait = ::waitpid(childPid, &status, WNOHANG);
-        if(wait == childPid) {
-            if(WIFEXITED(status)) { /* exit */
+    wait = ::waitpid(childPid, &status, WNOHANG);
+    if(wait == childPid) {
+        if(WIFEXITED(status)) { /* exit */
                 exitStatusSignal = WEXITSTATUS(status);
                 processStatus = PROCESS_STATUS_EXIT;
-            } else if(WIFSIGNALED(status)) {
+        } else if(WIFSIGNALED(status)) {
                 exitStatusSignal = WTERMSIG(status);
                 processStatus = PROCESS_STATUS_SIGNAL;
-            } else if(WIFSTOPPED(status)) {
+        } else if(WIFSTOPPED(status)) {
                 processStatus = PROCESS_STATUS_STOP;
             } else if(WIFCONTINUED(status)) {
                 processStatus = PROCESS_STATUS_RUNNING;
-            }
         }
     }
+}
+
+bool ProcessCommander::checkTimeout(
+        const struct timeval & begin,
+        const struct timeval & end,
+        int & timeoutMS)
+{
+    int diffMs;
+    if(timeoutMS <= 0) return false;
+
+    /* end - begin in ms */
+    /* end.tv_sec * 1000 + end.tv_usec / 1000 - begin.tv_sec * 1000 - begin.tv_usec / 1000 */
+    diffMs = (end.tv_sec - begin.tv_sec) * 1000 +
+            (end.tv_usec - begin.tv_usec) / 1000;
+
+    if(diffMs >= 0) {
+        if(timeoutMS > diffMs) {
+            timeoutMS -= diffMs;
+            return false;
+        }
+    }
+    return true;
 }
 
 int
@@ -288,20 +337,21 @@ ProcessCommander::waitForConditions(
         int timeoutMS)
 {
     fd_set readfds, writefds;
-    struct timeval timeout;
-    int ready, nfds = 0, ret = WAIT_MASK_ERROR;
+    struct timeval timeout, timebegin, timeend;
+    int ready, nfds = -1, ret = WAIT_MASK_ERROR;
 
     while(1) {
         FD_ZERO(&readfds); FD_ZERO(&writefds);
         memset(&timeout, 0, sizeof(timeout));
 
-        if(timeoutMS > 0) {
-            timeout.tv_sec = timeoutMS / 1000;
-            timeout.tv_usec = (timeoutMS % 1000) * 1000;
-        }
+        /* 10ms */
+        timeout.tv_sec = 0;
+        timeout.tv_usec = 10000;
 
-        FD_SET(fdStdin, &writefds);
-        nfds = fdStdin;
+        if(stdinBuffer.length()) {
+            FD_SET(fdStdin, &writefds);
+            nfds = _max(nfds, fdStdin);
+        }
         if(waitMask & WAIT_MASK_STATUS) {
             FD_SET(fdPid, &readfds);
             nfds = _max(nfds, fdPid);
@@ -316,33 +366,42 @@ ProcessCommander::waitForConditions(
         }
         nfds ++;
         ret = WAIT_MASK_NONE;
+        ::gettimeofday(&timebegin, NULL);
         ready = ::select(nfds, &readfds, &writefds, NULL, timeoutMS > 0 ? &timeout : NULL);
+        ::gettimeofday(&timeend, NULL);
         if(ready > 0) { /* check fds */
-            if((waitMask & WAIT_MASK_STATUS) && FD_ISSET(fdPid, &readfds)) {
-                ret |= WAIT_MASK_STATUS;
-                UpdateWaitStatus();
-            }
-            if((waitMask & WAIT_MASK_STDOUT) && FD_ISSET(fdStdout, &readfds)) {
-                if(ReadAppendMatchLastLine(fdStdout, programStdout, stdOut)) {
-                    ret |= WAIT_MASK_STDOUT;
-                }
-            }
-            if((waitMask & WAIT_MASK_STDERR) && FD_ISSET(fdStderr, &readfds)) {
-                if(ReadAppendMatchLastLine(fdStderr, programStderr, stdErr)) {
-                    ret |= WAIT_MASK_STDERR;
-                }
-            }
             if(FD_ISSET(fdStdin, &writefds)) {
                 WriteAppend(fdStdin, stdinBuffer, programStdin);
             }
+            if(FD_ISSET(fdStdout, &readfds)) {
+                if(ReadAppend(fdStdout, programStdout) && (waitMask & WAIT_MASK_STDOUT)) {
+                    if(Match(programStdout, stdOut)) {
+                        ret |= WAIT_MASK_STDOUT;
+                    }
+                }
+            }
+            if(FD_ISSET(fdStderr, &readfds)) {
+                if(ReadAppend(fdStderr, programStderr) && (waitMask & WAIT_MASK_STDERR)) {
+                    if(Match(programStderr, stdErr)) {
+                        ret |= WAIT_MASK_STDERR;
+                    }
+                }
+            }
+            if((waitMask & WAIT_MASK_STATUS) && FD_ISSET(fdPid, &readfds)) {
+                ret |= WAIT_MASK_STATUS;
+            }
+            UpdateWaitStatus();
             if(ret != WAIT_MASK_NONE) {
                 break;
             }
         } else if(ready == 0) { /* timeout */
-            ret = WAIT_MASK_NONE;
-            break;
+            if(checkTimeout(timebegin, timeend, timeoutMS)) {
+                ret = WAIT_MASK_NONE;
+                break;
+            }
         } else { /* error ? */
             ret = WAIT_MASK_ERROR;
+            updateLastError();
             break;
         }
     }

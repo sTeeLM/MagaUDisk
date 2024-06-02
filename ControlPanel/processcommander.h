@@ -108,6 +108,11 @@ public:
     {
         return programStderr;
     }
+
+    const QString & getLastError()
+    {
+        return lastError;
+    }
 private:
     QString programName;
     QStringList programArgs;
@@ -123,14 +128,16 @@ private:
     QByteArray stdinBuffer;
     int exitStatusSignal;
     PROCESS_STATUS processStatus;
+    QString lastError;
 
-    bool ReadAppendMatchLastLine(int fd, QByteArray & strList, const QString & str);
-    void ReadAppend(int fd, QByteArray & strList);
+    bool Match(QByteArray & strList, const QString & str);
+    bool ReadAppend(int fd, QByteArray & strList);
     void WriteAppend(int fd, QByteArray & toWrite, QByteArray & strList);
     void UpdateWaitStatus();
     char ** QStringList2CharPP(const QStringList & list);
     void FreeCharPP(char ** p);
-
+    bool checkTimeout(const struct timeval & begin, const struct timeval & end, int & timeoutMS);
+    void updateLastError();
 };
 
 #endif // PROCESSCOMMANDER_H

@@ -23,6 +23,7 @@ public:
       UNMOUNT_SERIAL_FAILED,
       MOUNT_NIC_FAILED,
       UNMOUNT_NIC_FAILED,
+      SYSTEM_ERROR,
       UNKNOWN_FAILED
     };
 
@@ -32,7 +33,7 @@ public:
         state = OK;
         translateState();
     }
-    void setState(FINISH_STATE s, const QString & extra)
+    void setState(FINISH_STATE s, const QString & extra = {})
     {
         strStateExtra = extra;
         state = s;

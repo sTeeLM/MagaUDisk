@@ -17,17 +17,41 @@ void ThreadPrepareDevice::run()
 {
     ProcessCommander process;
     QStringList args, env;
+    int retVal, exCode = -1;
+    QString stderr;
+    ControlPanelApplication * app = qobject_cast<ControlPanelApplication *>(qApp);
 
-    args.append(tr("-la"));
+    process.setProgram(tr("/usr/sbin/cryptsetup"));
+    args.append(tr("open"));
+    args.append(app->config.getSourcePartation());
+    args.append(tr("ControlPanel"));
     env.append(tr("PATH=/usr/bin:/usr/sbin"));
-    process.setProgram(tr("ls"));
     process.setArguments(args);
     process.setEnvironment(env);
 
-    process.start();
+    do {
+        if(!process.start()) {
+            setState(SYSTEM_ERROR, process.getLastError());
+            break;
+        }
 
-    QString stdout = tr("总计");
-    int ret = process.waitForConditions(stdout, {}, WAIT_MASK_STATUS|WAIT_MASK_STDOUT);
+        process.writeStdin(strPassword.append("\n").toLocal8Bit());
+        stderr = tr("No key available with this passphrase\\.\\n$");
+        retVal = process.waitForConditions({}, stderr, WAIT_MASK_STDERR|WAIT_MASK_STATUS, 10000);
+
+        if(retVal & WAIT_MASK_STDERR) {
+            setState(WRONG_PASS, QString(process.getStderr()));
+            break;
+        }
+
+        if((retVal & WAIT_MASK_STATUS) && process.isExited(&exCode) && exCode == 0) {
+            setStateOK();
+            break;
+        } else {
+            setState(SYSTEM_ERROR, QString(process.getStderr()));
+            break;
+        }
+    }while(0);
 
     process.clean();
 }

@@ -48,6 +48,9 @@ void StateThreadBase::translateState()
     case UNMOUNT_NIC_FAILED:
         strState = tr("断开网卡失败");
         break;
+    case SYSTEM_ERROR:
+        strState = tr("系统错误");
+        break;
     case UNKNOWN_FAILED:
         strState = tr("未知");
     }
