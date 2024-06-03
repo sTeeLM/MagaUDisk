@@ -32,8 +32,10 @@ void MainWindow::listImageDone()
     qDebug()<<tr("MainWindow::listImageDone");
     if(currentThread->isStateOK()) {
         showWidegt(WIDGET_SELECT_IMAGE);
-        ui->listWidgetImage->item(0)->setSelected(true);
-        ui->listWidgetImage->setFocus();
+        if(ui->listWidgetImage->count()) {
+            ui->listWidgetImage->item(0)->setSelected(true);
+            ui->listWidgetImage->setFocus();
+        }
     }
     delete currentThread;
     currentThread = nullptr;
@@ -197,16 +199,15 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         return;
     qDebug() << tr("MainWindow::keyPressEvent") << currentInterface->objectName() << event->key();
 
-    if(event->key() != Qt::Key_Enter
-        && event->key() != Qt::Key_Return
-        && event->key() != Qt::Key_Left) {
+    if(event->key() != Qt::Key_Enter && event->key() != Qt::Key_Return
+            && event->key() != Qt::Key_Left && event->key() != Qt::Key_Right) {
         QMainWindow::keyPressEvent(event);
         return;
     }
 
     /* 在获得密码界面按回车 */
     if(currentInterface->objectName() == QString(tr("widgetGetPass"))
-        && (event->key() != Qt::Key_Enter || event->key() != Qt::Key_Return)) {
+        && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         ui->labelWaitInfo->setText(tr("正在准备分区"));
         currentThread = new ThreadPrepareDevice(this, ui->lineEditPassword->text());
         connect(currentThread, &QThread::finished, this, &MainWindow::prepareDeviceDone);
@@ -215,11 +216,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
     /* 在主界面选择功能 */
     } else if(currentInterface->objectName() == QString(tr("widgetMain"))
-        && (event->key() != Qt::Key_Enter || event->key() != Qt::Key_Return)) {
+        && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         RadioGroup * buttonGroup = qobject_cast<RadioGroup *>(ui->widgetMain);
         switch(buttonGroup->mainFunctionGroup.checkedId()) {
         case 0: /* 装载单个镜像 */
-            currentThread = new ThreadListImage(this, ui->listWidgetImage);
+            currentThread = new ThreadListImage(this, ui->listWidgetImage, ui->widgetSelectImage->getCurrentPath());
             showWidegt(WIDGET_WAIT);
             connect(currentThread, &QThread::finished, this, &MainWindow::listImageDone);
             currentThread->start();
@@ -253,7 +254,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
     /* 在连接串口界面关闭串口 */
     } else if(currentInterface->objectName() == QString(tr("widgetMountSerial"))
-        && (event->key() != Qt::Key_Enter || event->key() != Qt::Key_Return)) {
+        && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         currentThread = new ThreadMountSerial(this, false);
         showWidegt(WIDGET_WAIT);
         connect(currentThread, &QThread::finished, this, &MainWindow::mountSerialDone);
@@ -261,7 +262,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
     /* 在装载整分区界面关闭分区 */
     } else if(currentInterface->objectName() == QString(tr("widgetMountPart"))
-        && (event->key() != Qt::Key_Enter || event->key() != Qt::Key_Return)) {
+        && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         currentThread = new ThreadMountPartation(this, false);
         showWidegt(WIDGET_WAIT);
         connect(currentThread, &QThread::finished, this, &MainWindow::mountPartationDone);
@@ -269,7 +270,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
     /* 在装载单个镜像界面关闭镜像 */
     } else if(currentInterface->objectName() == QString(tr("widgetMountImage"))
-        && (event->key() != Qt::Key_Enter || event->key() != Qt::Key_Return)) {
+        && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         currentThread = new ThreadMountImage(this, false);
         showWidegt(WIDGET_WAIT);
         connect(currentThread, &QThread::finished, this, &MainWindow::mountImageDone);
@@ -277,19 +278,77 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
     /* 在模拟网卡界面关闭网卡 */
     } else if(currentInterface->objectName() == QString(tr("widgetMountNic"))
-        && (event->key() != Qt::Key_Enter || event->key() != Qt::Key_Return)) {
+        && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         currentThread = new ThreadMountNic(this, false);
         showWidegt(WIDGET_WAIT);
         connect(currentThread, &QThread::finished, this, &MainWindow::mountNicDone);
         currentThread->start();
 
     /* 在选择镜像界面选择一个item */
-    } else if(currentInterface->objectName() == QString(tr("widgetSelectImage"))) {
+    } else if((currentInterface->objectName() == QString(tr("widgetSelectImage")))
+              && (event->key() == Qt::Key_Left
+                  || event->key() == Qt::Key_Right
+                  || event->key() == Qt::Key_Return
+                  || event->key() == Qt::Key_Enter)) {
+        QListWidgetItem * item = nullptr;
 
+        if(event->key() == Qt::Key_Left) /* back to prev path */ {
+            // already at root
+            if(ui->widgetSelectImage->getCurrentPath() == tr("/")) {
+                showWidegt(WIDGET_MAIN);
+            } else {
+                QString currentPath = ui->widgetSelectImage->popPath();
+                currentThread = new ThreadListImage(this, ui->listWidgetImage, currentPath);
+                showWidegt(WIDGET_WAIT);
+                connect(currentThread, &QThread::finished, this, &MainWindow::listImageDone);
+                currentThread->start();
+            }
+        } else if(event->key() == Qt::Key_Right) { /* goto sub folder */
+            if(ui->listWidgetImage->selectedItems().length()) {
+                item = ui->listWidgetImage->selectedItems()[0];
+            }
+            if(item && item->type() == 0 && item->text() != tr("..")) { // is an sub folder
+                QString currentPath = ui->widgetSelectImage->pushPath(item->text());
+                currentThread = new ThreadListImage(this, ui->listWidgetImage, currentPath);
+                showWidegt(WIDGET_WAIT);
+                connect(currentThread, &QThread::finished, this, &MainWindow::listImageDone);
+                currentThread->start();
+            }
+        } else {
+            if(ui->listWidgetImage->selectedItems().length()) {
+                item = ui->listWidgetImage->selectedItems()[0];
+            }
+            QString currentPath = ui->widgetSelectImage->getCurrentPath();
+            if(item && item->type() == 0) { // is an folder
+                QString currentPath;
+                if(item->text() != tr("..")) {
+                    currentPath = ui->widgetSelectImage->pushPath(item->text());
+                } else {
+                    if(ui->widgetSelectImage->getCurrentPath() != tr("/")) {
+                        currentPath = ui->widgetSelectImage->popPath();
+                    } else {
+                        currentPath = tr("");
+                    }
+                }
+                if(currentPath.length()) {
+                    currentThread = new ThreadListImage(this, ui->listWidgetImage, currentPath);
+                    showWidegt(WIDGET_WAIT);
+                    connect(currentThread, &QThread::finished, this, &MainWindow::listImageDone);
+                    currentThread->start();
+                } else {
+                    showWidegt(WIDGET_MAIN);
+                }
+            } else if(item && item->type() == 1) { // is a image
+                currentThread = new ThreadMountImage(this, true, currentPath + tr("/") + item->text());
+                showWidegt(WIDGET_WAIT);
+                connect(currentThread, &QThread::finished, this, &MainWindow::mountImageDone);
+                currentThread->start();
+            }
+        }
 
     /* 在修改密码界面按回车 */
     } else if(currentInterface->objectName() == QString(tr("widgetChangePassword"))
-        && (event->key() != Qt::Key_Enter || event->key() != Qt::Key_Return)) {
+        && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         currentThread = new ThreadChangePassword(this,
                                                  ui->lineEditOldPassword->text(),
                                                  ui->lineEditNewPassword->text(),
@@ -299,7 +358,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         currentThread->start();
     /* 在结果界面按下回车 */
     } else if(currentInterface->objectName() == QString(tr("widgetResult"))
-        && (event->key() != Qt::Key_Enter || event->key() != Qt::Key_Return)) {
+        && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         WidgetResult * res = qobject_cast<WidgetResult *>(currentInterface);
         showWidegt(res->getJumpWidget());
         res->setJumpWidget(WIDGET_NONE);

@@ -3,6 +3,7 @@
 #include "processcommander.h"
 
 #include <QDebug>
+#include <QFile>
 #include <QApplication>
 #include <QStringList>
 
@@ -16,20 +17,47 @@ ThreadPrepareDevice::ThreadPrepareDevice(QObject *parent, const QString & passwo
 void ThreadPrepareDevice::run()
 {
     ProcessCommander process;
-    QStringList args, env;
+    QStringList args, envs;
     int retVal, exCode = -1;
     QString stderr;
     ControlPanelApplication * app = qobject_cast<ControlPanelApplication *>(qApp);
 
-    process.setProgram(tr("/usr/sbin/cryptsetup"));
-    args.append(tr("open"));
-    args.append(app->config.getSourcePartation());
-    args.append(tr("ControlPanel"));
-    env.append(tr("PATH=/usr/bin:/usr/sbin"));
-    process.setArguments(args);
-    process.setEnvironment(env);
-
+    envs.append(tr("PATH=/bin:/usr/bin:/sbin/usr/sbin"));
     do {
+        /* umount mount point if nessaery */
+        args.append(tr("/dev/mapper/ControlPanel"));
+        args.append(tr("/proc/mounts"));
+        if(process.oneShot(tr("/usr/bin/grep"),args)) {
+            qDebug() << tr("ThreadPrepareDevice::run /dev/mapper/ControlPanel already mounted, try unmount it!");
+            args.clear();
+            args.append(tr("/dev/mapper/ControlPanel"));
+            if(!process.oneShot(tr("/usr/bin/umount"),args)) {
+                setState(SYSTEM_ERROR, process.getLastError());
+                break;
+            }
+        }
+        args.clear();
+        args.append(tr("/dev/mapper/ControlPanel"));
+        if(process.oneShot(tr("/bin/ls"),args)) {
+            qDebug() << tr("ThreadPrepareDevice::run /dev/mapper/ControlPanel exist, try close it!");
+            args.clear();
+            args.append(tr("close"));
+            args.append(tr("ControlPanel"));
+            if(!process.oneShot(tr("/usr/sbin/cryptsetup"),args)) {
+                setState(SYSTEM_ERROR, process.getLastError());
+                break;
+            }
+        }
+
+        /* open device with password */
+        process.setProgram(tr("/usr/sbin/cryptsetup"));
+        args.clear();
+        args.append(tr("open"));
+        args.append(app->config.getSourcePartation());
+        args.append(tr("ControlPanel"));
+        process.setArguments(args);
+        process.setEnvironment(envs);
+
         if(!process.start()) {
             setState(SYSTEM_ERROR, process.getLastError());
             break;
@@ -44,7 +72,18 @@ void ThreadPrepareDevice::run()
             break;
         }
 
-        if((retVal & WAIT_MASK_STATUS) && process.isExited(&exCode) && exCode == 0) {
+        if(!(retVal & WAIT_MASK_STATUS) || !process.isExited(&exCode) || exCode != 0) {
+            setState(SYSTEM_ERROR, QString(process.getStderr()));
+            break;
+        }
+
+        /* mount it to mount_root */
+        args.clear();
+        args.append(tr("-o"));
+        args.append(tr("rw"));
+        args.append(tr("/dev/mapper/ControlPanel"));
+        args.append(app->config.getMountRoot());
+        if(process.oneShot(tr("/usr/bin/mount"),args)) {
             setStateOK();
             break;
         } else {
@@ -52,6 +91,5 @@ void ThreadPrepareDevice::run()
             break;
         }
     }while(0);
-
     process.clean();
 }

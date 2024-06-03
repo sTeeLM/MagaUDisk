@@ -3,7 +3,8 @@
 #include <QDebug>
 
 WidgetSelectImage::WidgetSelectImage(QWidget *parent)
-    : QWidget{parent}
+    : QWidget(parent)
+    , currentPath(tr("/"))
 {
 
 }

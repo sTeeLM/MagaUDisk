@@ -52,21 +52,22 @@ char ** ProcessCommander::QStringList2CharPP(const QStringList & list)
 {
     char ** ret = nullptr;
     size_t length = list.length();
-
-    ret = static_cast<char **>(::malloc((length + 1) * sizeof(char *)));
-    if(ret != nullptr) {
-        size_t i;
-        for(i = 0 ; i < length; i ++) {
-            size_t size = list.at(i).toLocal8Bit().length();
-            ret[i] = static_cast<char *>(::malloc(size + 1));
-            if(ret[i]) {
-                ::strncpy(ret[i], list.at(i).toLocal8Bit().constData(), size);
-                ret[i][size] = 0;
-            } else {
-                break;
+    if(length > 0) {
+        ret = static_cast<char **>(::malloc((length + 1) * sizeof(char *)));
+        if(ret != nullptr) {
+            size_t i;
+            for(i = 0 ; i < length; i ++) {
+                size_t size = list.at(i).toLocal8Bit().length();
+                ret[i] = static_cast<char *>(::malloc(size + 1));
+                if(ret[i]) {
+                    ::strncpy(ret[i], list.at(i).toLocal8Bit().constData(), size);
+                    ret[i][size] = 0;
+                } else {
+                    break;
+                }
             }
+            ret[i] = nullptr;
         }
-        ret[i] = nullptr;
     }
     return ret;
 }
@@ -129,6 +130,41 @@ void ProcessCommander::updateLastError()
     lastError.fromLocal8Bit(buffer);
 }
 
+bool ProcessCommander::oneShot(
+        const QString & program,
+        const QStringList & args,
+        const QStringList & envs,
+        const QString & stdIn,
+        int * excode)
+{
+    int retVal = WAIT_MASK_NONE;
+    QStringList envTemp = envs;
+    int exCode = -1;
+    bool isexit = false;
+
+    if(stdIn.length()) {
+        writeStdin(stdIn.toLocal8Bit());
+    }
+
+    if(!envTemp.length()) {
+        envTemp.append(tr("PATH=/bin:/usr/bin:/sbin/usr/sbin"));
+    }
+    setProgram(program);
+    setEnvironment(envTemp);
+    setArguments(args);
+
+    if(start()) {
+        retVal = waitForConditions({}, {}, WAIT_MASK_STATUS, 10000);
+        if(retVal & WAIT_MASK_STATUS) {
+            if((isexit = isExited(&exCode)))
+                if(excode)
+                    *excode = exCode;
+        }
+    }
+    clean();
+    return (retVal & WAIT_MASK_STATUS) && isexit && exCode == 0 ;
+}
+
 bool ProcessCommander::start()
 {
     int pipeStdin[2] = {-1, -1};
@@ -146,8 +182,10 @@ bool ProcessCommander::start()
         goto err;
     }
 
-    if((envs = QStringList2CharPP(programEnvs)) == nullptr) {
-        goto err;
+    if(programEnvs.length() > 0) {
+        if((envs = QStringList2CharPP(programEnvs)) == nullptr) {
+            goto err;
+        }
     }
 
     /* create 3 pipe pair */
@@ -272,6 +310,17 @@ void ProcessCommander::clean()
         ::close(fdPid);
         fdPid = -1;
     }
+
+    programName.clear();
+    programArgs.clear();
+    programEnvs.clear();
+    programStdin.clear();
+    programStdout.clear();
+    programStderr.clear();
+    stdinBuffer.clear();
+    exitStatusSignal = 0;
+    processStatus = PROCESS_STATUS_EXIT;
+    lastError.clear();
 }
 
 void ProcessCommander::sendSignal(int signo)

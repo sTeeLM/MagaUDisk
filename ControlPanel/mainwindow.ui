@@ -201,10 +201,10 @@
     <widget class="QListWidget" name="listWidgetImage">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>130</width>
-       <height>130</height>
+       <x>5</x>
+       <y>5</y>
+       <width>110</width>
+       <height>110</height>
       </rect>
      </property>
      <property name="showDropIndicator" stdset="0">

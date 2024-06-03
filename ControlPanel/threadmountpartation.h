@@ -9,6 +9,7 @@ class ThreadMountPartation : public StateThreadMount
     Q_OBJECT
 public:
     explicit ThreadMountPartation(QObject *parent = nullptr, bool isMount = true);
+    void run();
 };
 
 #endif // THREADMOUNTPARTATION_H

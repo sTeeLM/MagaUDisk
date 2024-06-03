@@ -96,6 +96,13 @@ public:
         return processStatus == PROCESS_STATUS_STOP;
     }
 
+    bool oneShot(
+            const QString & program,
+            const QStringList & args = {},
+            const QStringList & envs = {},
+            const QString & stdIn = {},
+            int * excode = nullptr);
+
     const QByteArray & getStdout()
     {
         return programStdin;
