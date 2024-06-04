@@ -10,7 +10,7 @@ class ControlPanelApplication : public QApplication
 {
     Q_OBJECT
 public:
-    ControlPanelApplication(int argc, char ** argv);
+    ControlPanelApplication(int & argc, char ** argv);
     ControlPanelConfig config;
 };
 

@@ -101,7 +101,8 @@ public:
             const QStringList & args = {},
             const QStringList & envs = {},
             const QString & stdIn = {},
-            int * excode = nullptr);
+            int * excode = nullptr,
+            int timeout = 10000);
 
     const QByteArray & getStdout()
     {

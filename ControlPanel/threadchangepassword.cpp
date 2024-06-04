@@ -1,5 +1,8 @@
 #include "threadchangepassword.h"
+#include "controlpanelapplication.h"
+#include "processcommander.h"
 
+#include <QDebug>
 ThreadChangePassword::ThreadChangePassword(QObject *parent, const QString & oldPass, const QString & newPass, const QString & newPassAgain)
     : StateThreadBase{parent}
     , strOldPass(oldPass)
@@ -11,6 +14,43 @@ ThreadChangePassword::ThreadChangePassword(QObject *parent, const QString & oldP
 
 void ThreadChangePassword::run()
 {
-    QThread::sleep(1);
-    setStateOK();
+    ProcessCommander process;
+    QStringList args;
+    QString stdin;
+    ControlPanelApplication * app = qobject_cast<ControlPanelApplication *>(qApp);
+    int excode;
+
+    do {
+        if(strOldPass.length() == 0 || strNewPass.length() == 0 || strNewPassAgain.length() == 0) {
+            setState(CHANGE_PASS_FAILED, tr("密码为空!"));
+            break;
+        }
+        if(strNewPass != strNewPassAgain) {
+            setState(CHANGE_PASS_FAILED, tr("两次新密码不匹配!"));
+            break;
+        }
+        if(strNewPass == strOldPass) {
+            setState(CHANGE_PASS_FAILED, tr("新旧密码相同!"));
+            break;
+        }
+
+        /* change password */
+        args.clear();
+        args.append(tr("luksChangeKey"));
+        args.append(app->config.getSourcePartation());
+        process.setArguments(args);
+        stdin = strOldPass + tr("\n") + strNewPass + tr("\n") + strNewPassAgain + tr("\n");
+        if(!process.oneShot(tr("/usr/sbin/cryptsetup"),
+                            args,
+                            {},
+                            stdin,
+                            &excode,
+                            app->config.getCommandTimeoutMs()) || excode != 0) {
+            setState(CHANGE_PASS_FAILED, process.getLastError());
+            break;
+        }
+
+        setStateOK();
+    }while(0);
+    process.clean();
 }

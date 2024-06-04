@@ -13,7 +13,6 @@ public:
     enum FINISH_STATE {
       OK = 0,
       WRONG_PASS,
-      MISMATCH_PASS,
       CHANGE_PASS_FAILED,
       MOUNT_PART_FAILED,
       UNMOUNT_PART_FAILED,

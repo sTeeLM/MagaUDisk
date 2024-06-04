@@ -25,11 +25,10 @@ public:
     enum WIDGET_ID {
         WIDGET_NONE = -1,
         WIDGET_GET_PASS = 0,
-        WIDGET_MOUNT_SERIAL,
         WIDGET_MAIN,
-        WIDGET_MOUNT_IMAGE,
+        WIDGET_MOUNT_SERIAL,
+        WIDGET_MOUNT_BLOCK,
         WIDGET_MOUNT_NIC,
-        WIDGET_MOUNT_PART,
         WIDGET_SELECT_IMAGE,
         WIDGET_WAIT,
         WIDGET_CHANGE_PASSWORD,

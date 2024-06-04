@@ -27,6 +27,7 @@ SOURCES += \
     threadmountserial.cpp \
     threadpreparedevice.cpp \
     widgetchangepassword.cpp \
+    widgetmountblock.cpp \
     widgetresult.cpp \
     widgetselectimage.cpp
 
@@ -47,6 +48,7 @@ HEADERS += \
     threadmountserial.h \
     threadpreparedevice.h \
     widgetchangepassword.h \
+    widgetmountblock.h \
     widgetresult.h \
     widgetselectimage.h
 

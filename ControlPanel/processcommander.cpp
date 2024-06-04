@@ -135,7 +135,8 @@ bool ProcessCommander::oneShot(
         const QStringList & args,
         const QStringList & envs,
         const QString & stdIn,
-        int * excode)
+        int * excode,
+        int timeout)
 {
     int retVal = WAIT_MASK_NONE;
     QStringList envTemp = envs;
@@ -154,11 +155,12 @@ bool ProcessCommander::oneShot(
     setArguments(args);
 
     if(start()) {
-        retVal = waitForConditions({}, {}, WAIT_MASK_STATUS, 10000);
+        retVal = waitForConditions({}, {}, WAIT_MASK_STATUS, timeout);
         if(retVal & WAIT_MASK_STATUS) {
-            if((isexit = isExited(&exCode)))
+            if((isexit = isExited(&exCode))) {
                 if(excode)
                     *excode = exCode;
+            }
         }
     }
     clean();

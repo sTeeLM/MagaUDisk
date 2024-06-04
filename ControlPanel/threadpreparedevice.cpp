@@ -27,7 +27,7 @@ void ThreadPrepareDevice::run()
         /* umount mount point if nessaery */
         args.append(tr("/dev/mapper/ControlPanel"));
         args.append(tr("/proc/mounts"));
-        if(process.oneShot(tr("/usr/bin/grep"),args)) {
+        if(process.oneShot(tr("/usr/bin/grep"), args)) {
             qDebug() << tr("ThreadPrepareDevice::run /dev/mapper/ControlPanel already mounted, try unmount it!");
             args.clear();
             args.append(tr("/dev/mapper/ControlPanel"));
@@ -38,12 +38,12 @@ void ThreadPrepareDevice::run()
         }
         args.clear();
         args.append(tr("/dev/mapper/ControlPanel"));
-        if(process.oneShot(tr("/bin/ls"),args)) {
+        if(process.oneShot(tr("/bin/ls"), args)) {
             qDebug() << tr("ThreadPrepareDevice::run /dev/mapper/ControlPanel exist, try close it!");
             args.clear();
             args.append(tr("close"));
             args.append(tr("ControlPanel"));
-            if(!process.oneShot(tr("/usr/sbin/cryptsetup"),args)) {
+            if(!process.oneShot(tr("/usr/sbin/cryptsetup"), args)) {
                 setState(SYSTEM_ERROR, process.getLastError());
                 break;
             }
@@ -65,7 +65,8 @@ void ThreadPrepareDevice::run()
 
         process.writeStdin(strPassword.append("\n").toLocal8Bit());
         stderr = tr("No key available with this passphrase\\.\\n$");
-        retVal = process.waitForConditions({}, stderr, WAIT_MASK_STDERR|WAIT_MASK_STATUS, 10000);
+        retVal = process.waitForConditions({}, stderr, WAIT_MASK_STDERR|WAIT_MASK_STATUS,
+                                           app->config.getCommandTimeoutMs());
 
         if(retVal & WAIT_MASK_STDERR) {
             setState(WRONG_PASS, QString(process.getStderr()));

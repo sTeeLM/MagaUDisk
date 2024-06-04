@@ -4,33 +4,14 @@
 
 #include <QLocale>
 #include <QTranslator>
-#include <QCommandLineParser>
+
 
 int main(int argc, char *argv[])
 {
     ControlPanelApplication a(argc, argv);
 
-    QCommandLineParser parser;
-    parser.addHelpOption();
-    parser.addVersionOption();
-    QCommandLineOption opt("f","config file","config");
-    parser.addOption(opt);
-
-    QStringList args;
-
-    for(int i = 0 ; i < argc; i ++) {
-        args.append(argv[i]);
-    }
-
-    parser.process(args);
-
-    QString configFilePath = QObject::tr("/etc/ControlPanel.cfg");
-
-    if(parser.isSet(opt)) {
-        configFilePath =  parser.value(opt);
-    }
-
-    a.config.loadConfig(configFilePath);
+    QFont serifFont("苹方-简", 8, QFont::Normal);
+    a.setFont(serifFont);
 
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();

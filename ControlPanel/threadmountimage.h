@@ -9,6 +9,7 @@ class ThreadMountImage : public StateThreadMount
     Q_OBJECT
 public:
     explicit ThreadMountImage(QObject *parent = nullptr, bool isMount = true, const QString & image = {});
+    void run();
 private:
     QString imagePath;
 };

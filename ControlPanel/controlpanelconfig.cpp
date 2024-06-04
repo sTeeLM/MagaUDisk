@@ -10,6 +10,7 @@ ControlPanelConfig::ControlPanelConfig(QObject *parent)
     , sourcePartation(tr("/dev/mmcblk0p3"))
     , iconFolder(tr("/usr/share/ControlPanel/icons"))
     , mountRoot(tr("/mnt"))
+    , commandTimeoutMs(30000)
 {
 
 }
@@ -36,6 +37,13 @@ void ControlPanelConfig::loadConfig(const QString & config)
             if(jsonConfig.value(tr("mount_root")).isString()) {
                 mountRoot = jsonConfig.value(tr("mount_root")).toString();
             }
+            if(jsonConfig.value(tr("command_timeout_ms")).isDouble()) {
+                commandTimeoutMs = jsonConfig.value(tr("command_timeout_ms")).toInt();
+            } else {
+                qDebug() << tr("config file %s open error!").arg(config);
+            }
+        } else {
+            qDebug() << tr("config file %s open error!").arg(config);
         }
     } else {
         qDebug() << tr("config file %s open error!").arg(config);
@@ -44,5 +52,6 @@ void ControlPanelConfig::loadConfig(const QString & config)
     qDebug() << tr("source_partation: %1").arg(sourcePartation);
     qDebug() << tr("icon_folder: %1").arg(iconFolder);
     qDebug() << tr("mount_root: %1").arg(mountRoot);
+    qDebug() << tr("command_timeout_ms: %1").arg(commandTimeoutMs);
 }
 

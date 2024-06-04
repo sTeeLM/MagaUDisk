@@ -28,12 +28,17 @@ public:
         return mountRoot;
     }
 
+    int getCommandTimeoutMs()
+    {
+        return commandTimeoutMs;
+    }
+
 private:
 
     QString sourcePartation;
     QString iconFolder;
     QString mountRoot;
-
+    int     commandTimeoutMs;
 signals:
 };
 

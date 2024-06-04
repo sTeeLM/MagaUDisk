@@ -9,6 +9,7 @@ class ThreadMountSerial : public StateThreadMount
     Q_OBJECT
 public:
     explicit ThreadMountSerial(QObject *parent = nullptr, bool isMount = true);
+    void run();
 };
 
 #endif // THREADMOUNTSERIAL_H

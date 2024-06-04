@@ -18,9 +18,6 @@ void StateThreadBase::translateState()
     case WRONG_PASS:
         strState = tr("密码错误");
         break;
-    case MISMATCH_PASS:
-        strState = tr("两次密码不匹配");
-        break;
     case CHANGE_PASS_FAILED:
         strState = tr("设置密码失败");
         break;
