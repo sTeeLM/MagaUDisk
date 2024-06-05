@@ -19,6 +19,7 @@ SOURCES += \
     radiogroup.cpp \
     statethreadbase.cpp \
     statethreadmount.cpp \
+    threadblockbase.cpp \
     threadchangepassword.cpp \
     threadlistimage.cpp \
     threadmountimage.cpp \
@@ -40,6 +41,7 @@ HEADERS += \
     radiogroup.h \
     statethreadbase.h \
     statethreadmount.h \
+    threadblockbase.h \
     threadchangepassword.h \
     threadlistimage.h \
     threadmountimage.h \

@@ -9,6 +9,7 @@ class WidgetMountBlock : public QWidget
     Q_OBJECT
 public:
     explicit WidgetMountBlock(QWidget *parent = nullptr);
+    void keyPressEvent(QKeyEvent *event);
     bool getMountImage () {
         return mountImage;
     }

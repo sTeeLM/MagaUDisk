@@ -29,7 +29,7 @@ void WidgetChangePassword::keyPressEvent(QKeyEvent *event)
 
     if (event->key() == Qt::Key_Up || event->key() == Qt::Key_Down) {
         if(event->key() == Qt::Key_Down)
-            focus = (++focus) % 3;
+            focus = (focus + 1) % 3;
         else {
             focus --;
             if(focus < 0) focus = 2;

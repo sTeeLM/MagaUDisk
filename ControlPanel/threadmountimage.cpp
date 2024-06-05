@@ -5,7 +5,7 @@
 #include <QDebug>
 
 ThreadMountImage::ThreadMountImage(QObject *parent, bool isMount, const QString & image)
-    : StateThreadMount(parent, isMount)
+    : ThreadBlockBase(parent, isMount)
     , imagePath(image)
 {}
 

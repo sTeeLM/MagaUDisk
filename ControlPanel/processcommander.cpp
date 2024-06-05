@@ -43,10 +43,12 @@ static int pidfd_open(pid_t pid, unsigned int flags)
     return ::syscall(__NR_pidfd_open, pid, flags);
 }
 
+
 static int pidfd_send_signal(int pidfd, int sig, siginfo_t * info, unsigned int flags)
 {
     return ::syscall(__NR_pidfd_send_signal, pidfd, sig, info, flags);
 }
+
 
 char ** ProcessCommander::QStringList2CharPP(const QStringList & list)
 {
@@ -163,7 +165,6 @@ bool ProcessCommander::oneShot(
             }
         }
     }
-    clean();
     return (retVal & WAIT_MASK_STATUS) && isexit && exCode == 0 ;
 }
 
@@ -329,7 +330,7 @@ void ProcessCommander::sendSignal(int signo)
 {
     if(processStatus == PROCESS_STATUS_STOP
             || processStatus == PROCESS_STATUS_RUNNING) {
-        ::kill(childPid, signo);
+        pidfd_send_signal(fdPid, signo, NULL, 0);
     }
 }
 
@@ -406,18 +407,16 @@ ProcessCommander::waitForConditions(
             FD_SET(fdStdin, &writefds);
             nfds = _max(nfds, fdStdin);
         }
-        if(waitMask & WAIT_MASK_STATUS) {
-            FD_SET(fdPid, &readfds);
-            nfds = _max(nfds, fdPid);
-        }
-        if(waitMask & WAIT_MASK_STDOUT) {
-            FD_SET(fdStdout, &readfds);
-            nfds = _max(nfds, fdStdout);
-        }
-        if(waitMask & WAIT_MASK_STDERR) {
-            FD_SET(fdStderr, &readfds);
-            nfds = _max(nfds, fdStderr);
-        }
+
+        FD_SET(fdPid, &readfds);
+        nfds = _max(nfds, fdPid);
+
+        FD_SET(fdStdout, &readfds);
+        nfds = _max(nfds, fdStdout);
+
+        FD_SET(fdStderr, &readfds);
+        nfds = _max(nfds, fdStderr);
+
         nfds ++;
         ret = WAIT_MASK_NONE;
         ::gettimeofday(&timebegin, NULL);

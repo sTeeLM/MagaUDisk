@@ -8,13 +8,14 @@
 #include <QStringList>
 
 ThreadMountPartation::ThreadMountPartation(QObject *parent, bool isMount)
-    : StateThreadMount(parent, isMount)
+    : ThreadBlockBase(parent, isMount)
 {}
 
 void ThreadMountPartation::run()
 {
     ProcessCommander process;
     QStringList args;
+    QString stdoutStr;
     ControlPanelApplication * app = qobject_cast<ControlPanelApplication *>(qApp);
 
     do {
@@ -26,6 +27,21 @@ void ThreadMountPartation::run()
                 setState(SYSTEM_ERROR, process.getLastError());
                 break;
             }
+            process.clean();
+
+            /* get block info */
+            args.clear();
+            args.append(tr("-o"));
+            args.append(tr("export"));
+            args.append(tr("-p"));
+            args.append(tr("/dev/mapper/ControlPanel"));
+            if(!process.oneShot(tr("/usr/sbin/blkid"),args)) {
+                setState(SYSTEM_ERROR, process.getLastError());
+                break;
+            }
+            setBlockInfo(QString::fromLocal8Bit(process.getStdout()));
+            process.clean();
+
             /* setup usb mass storage */
             //args.clear();
             //args.append(tr("/dev/mapper/ControlPanel"));
@@ -33,6 +49,7 @@ void ThreadMountPartation::run()
             //    setState(SYSTEM_ERROR, process.getLastError());
             //    break;
             //}
+            process.clean();
             setStateOK();
         } else {
             /* clean usb mass storage */
@@ -42,6 +59,7 @@ void ThreadMountPartation::run()
             //    setState(SYSTEM_ERROR, process.getLastError());
             //    break;
             //}
+            //process.clean();
             /* mount root */
             args.clear();
             args.append(tr("-o"));
@@ -52,6 +70,7 @@ void ThreadMountPartation::run()
                 setState(SYSTEM_ERROR, process.getLastError());
                 break;
             }
+            process.clean();
             setStateOK();
         }
     }while(0);

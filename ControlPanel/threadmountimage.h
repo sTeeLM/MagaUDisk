@@ -2,9 +2,9 @@
 #define THREADMOUNTIMAGE_H
 
 #include <QObject>
-#include "statethreadmount.h"
+#include "threadblockbase.h"
 
-class ThreadMountImage : public StateThreadMount
+class ThreadMountImage : public ThreadBlockBase
 {
     Q_OBJECT
 public:

@@ -2,9 +2,9 @@
 #define THREADMOUNTPARTATION_H
 
 #include <QObject>
-#include "statethreadmount.h"
+#include "threadblockbase.h"
 
-class ThreadMountPartation : public StateThreadMount
+class ThreadMountPartation : public ThreadBlockBase
 {
     Q_OBJECT
 public:

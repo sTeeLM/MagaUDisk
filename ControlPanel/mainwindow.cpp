@@ -51,8 +51,12 @@ void MainWindow::mountImageDone()
 
     if(thread->isMount()) {
         if(currentThread->isStateOK()) {
-            showWidegt(WIDGET_MOUNT_BLOCK);
             ui->widgetMountBlock->setMountImage(true);
+            ui->listWidgetBlockInfo->clear();
+            for( int i = 0 ; i < thread->getBlockInfo().size() ; i ++) {
+                ui->listWidgetBlockInfo->addItem(thread->getBlockInfo().at(i));
+            }
+            showWidegt(WIDGET_MOUNT_BLOCK);
         } else {
             showWidegt(WIDGET_RESULT, WIDGET_MAIN);
             ui->labelResultTitle->setText(currentThread->getStateString());
@@ -80,8 +84,16 @@ void MainWindow::mountPartationDone()
 
     if(thread->isMount()) {
         if(currentThread->isStateOK()) {
-            showWidegt(WIDGET_MOUNT_BLOCK);
             ui->widgetMountBlock->setMountImage(false);
+            ui->listWidgetBlockInfo->clear();
+            for( int i = 0 ; i < thread->getBlockInfo().size() ; i ++) {
+                ui->listWidgetBlockInfo->addItem(thread->getBlockInfo().at(i));
+            }
+            if(thread->getBlockInfo().size()) {
+                ui->listWidgetBlockInfo->item(0)->setSelected(true);
+                ui->listWidgetBlockInfo->setFocus();
+            }
+            showWidegt(WIDGET_MOUNT_BLOCK);
         } else {
             showWidegt(WIDGET_RESULT, WIDGET_MAIN);
             ui->labelResultTitle->setText(currentThread->getStateString());
@@ -247,7 +259,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             currentThread->start();
             break;
         case 4: /* 修改密码 */
-            ui->lineEditPassword->setText(tr(""));
+            ui->lineEditOldPassword->setText(tr(""));
             ui->lineEditNewPassword->setText(tr(""));
             ui->lineEditNewPasswordAgain->setText(tr(""));
             showWidegt(WIDGET_CHANGE_PASSWORD);
@@ -424,6 +436,9 @@ void MainWindow::showWidegt(WIDGET_ID id, WIDGET_ID idJump)
 
     ui->widgetMountBlock->setEnabled(id == WIDGET_MOUNT_BLOCK);
     ui->widgetMountBlock->setVisible(id == WIDGET_MOUNT_BLOCK);
+    if(id == WIDGET_MOUNT_BLOCK) {
+        ui->listWidgetBlockInfo->setFocus();
+    }
 
     ui->widgetMountNic->setEnabled(id == WIDGET_MOUNT_NIC);
     ui->widgetMountNic->setVisible(id == WIDGET_MOUNT_NIC);

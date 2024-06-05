@@ -106,15 +106,15 @@ public:
 
     const QByteArray & getStdout()
     {
-        return programStdin;
+        return programStdout;
     }
     const QByteArray & getStderr()
     {
-        return programStdout;
+        return programStderr;
     }
     const QByteArray & getStdin()
     {
-        return programStderr;
+        return programStdin;
     }
 
     const QString & getLastError()

@@ -36,6 +36,8 @@ void ThreadPrepareDevice::run()
                 break;
             }
         }
+        process.clean();
+
         args.clear();
         args.append(tr("/dev/mapper/ControlPanel"));
         if(process.oneShot(tr("/bin/ls"), args)) {
@@ -48,6 +50,7 @@ void ThreadPrepareDevice::run()
                 break;
             }
         }
+        process.clean();
 
         /* open device with password */
         process.setProgram(tr("/usr/sbin/cryptsetup"));
@@ -57,7 +60,6 @@ void ThreadPrepareDevice::run()
         args.append(tr("ControlPanel"));
         process.setArguments(args);
         process.setEnvironment(envs);
-
         if(!process.start()) {
             setState(SYSTEM_ERROR, process.getLastError());
             break;
@@ -77,6 +79,7 @@ void ThreadPrepareDevice::run()
             setState(SYSTEM_ERROR, QString(process.getStderr()));
             break;
         }
+        process.clean();
 
         /* mount it to mount_root */
         args.clear();

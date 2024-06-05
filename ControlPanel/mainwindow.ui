@@ -176,6 +176,12 @@
        <height>130</height>
       </rect>
      </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
      <property name="showDropIndicator" stdset="0">
       <bool>false</bool>
      </property>
@@ -184,6 +190,12 @@
        <width>32</width>
        <height>32</height>
       </size>
+     </property>
+     <property name="horizontalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
      </property>
     </widget>
    </widget>
@@ -305,9 +317,9 @@ Press      :确认
     <widget class="PasswordEdit" name="lineEditOldPassword" native="true">
      <property name="geometry">
       <rect>
-       <x>60</x>
+       <x>40</x>
        <y>20</y>
-       <width>61</width>
+       <width>80</width>
        <height>21</height>
       </rect>
      </property>
@@ -315,9 +327,9 @@ Press      :确认
     <widget class="PasswordEdit" name="lineEditNewPassword" native="true">
      <property name="geometry">
       <rect>
-       <x>60</x>
+       <x>40</x>
        <y>50</y>
-       <width>61</width>
+       <width>80</width>
        <height>21</height>
       </rect>
      </property>
@@ -325,9 +337,9 @@ Press      :确认
     <widget class="PasswordEdit" name="lineEditNewPasswordAgain" native="true">
      <property name="geometry">
       <rect>
-       <x>60</x>
+       <x>40</x>
        <y>80</y>
-       <width>61</width>
+       <width>80</width>
        <height>21</height>
       </rect>
      </property>
@@ -342,7 +354,7 @@ Press      :确认
       </rect>
      </property>
      <property name="text">
-      <string>老密码</string>
+      <string>老密</string>
      </property>
     </widget>
     <widget class="QLabel" name="labelNewPassword">
@@ -355,7 +367,7 @@ Press      :确认
       </rect>
      </property>
      <property name="text">
-      <string>新密码</string>
+      <string>新密</string>
      </property>
     </widget>
     <widget class="QLabel" name="labelNewPasswordAgain">
