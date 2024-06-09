@@ -1,16 +1,16 @@
 #ifndef THREADPREPAREDEVICE_H
 #define THREADPREPAREDEVICE_H
 
-#include "statethreadbase.h"
+#include "statethreadmount.h"
 
 #include <QObject>
 #include <QThread>
 
-class ThreadPrepareDevice : public StateThreadBase
+class ThreadPrepareDevice : public StateThreadMount
 {
     Q_OBJECT
 public:
-    explicit ThreadPrepareDevice(QObject *parent, const QString & password);
+    explicit ThreadPrepareDevice(QObject *parent, const QString & password, bool isMount = true);
     void run();
 private:
     QString strPassword;

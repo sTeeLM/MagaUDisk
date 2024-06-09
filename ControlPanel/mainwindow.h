@@ -30,6 +30,7 @@ public:
         WIDGET_MOUNT_BLOCK,
         WIDGET_MOUNT_NIC,
         WIDGET_SELECT_IMAGE,
+        WIDGET_SELECT_NIC,
         WIDGET_WAIT,
         WIDGET_CHANGE_PASSWORD,
         WIDGET_RESULT
@@ -40,6 +41,7 @@ private:
 
     void showWidegt(WIDGET_ID id, WIDGET_ID idJump = WIDGET_NONE);
 
+    void listNicDone();
     void listImageDone();
     void prepareDeviceDone();
     void mountPartationDone();
@@ -47,6 +49,7 @@ private:
     void mountNicDone();
     void mountImageDone();
     void changePasswordDone();
+    void clossDeviceDone();
 
     Ui::MainWindow *ui;
     QWidget * currentInterface;

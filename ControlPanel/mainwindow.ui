@@ -13,7 +13,19 @@
     <height>130</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>130</width>
+    <height>130</height>
+   </size>
+  </property>
   <property name="maximumSize">
+   <size>
+    <width>130</width>
+    <height>130</height>
+   </size>
+  </property>
+  <property name="baseSize">
    <size>
     <width>130</width>
     <height>130</height>
@@ -31,14 +43,14 @@
    </property>
    <widget class="RadioGroup" name="widgetMain" native="true">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>0</width>
-      <height>0</height>
+      <width>130</width>
+      <height>130</height>
      </rect>
     </property>
     <property name="focusPolicy">
@@ -48,7 +60,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>0</y>
        <width>121</width>
        <height>20</height>
       </rect>
@@ -61,7 +73,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>30</y>
+       <y>20</y>
        <width>121</width>
        <height>20</height>
       </rect>
@@ -74,7 +86,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
+       <y>40</y>
        <width>121</width>
        <height>20</height>
       </rect>
@@ -87,7 +99,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>70</y>
+       <y>60</y>
        <width>121</width>
        <height>20</height>
       </rect>
@@ -100,7 +112,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>90</y>
+       <y>80</y>
        <width>121</width>
        <height>20</height>
       </rect>
@@ -109,17 +121,30 @@
       <string>修改密码</string>
      </property>
     </widget>
+    <widget class="QRadioButton" name="radioButtonClean">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>121</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>关闭</string>
+     </property>
+    </widget>
    </widget>
    <widget class="WidgetMountBlock" name="widgetMountBlock" native="true">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>130</width>
-      <height>130</height>
+      <width>0</width>
+      <height>0</height>
      </rect>
     </property>
     <property name="focusPolicy">
@@ -215,7 +240,7 @@
      <enum>Qt::StrongFocus</enum>
     </property>
    </widget>
-   <widget class="QWidget" name="widgetGetPass" native="true">
+   <widget class="WidgetGetPassword" name="widgetGetPass" native="true">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -423,6 +448,49 @@ Press      :确认
      </property>
     </widget>
    </widget>
+   <widget class="WidgetSelectNic" name="widgetSelectNic" native="true">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>0</width>
+      <height>0</height>
+     </rect>
+    </property>
+    <widget class="QTreeWidget" name="treeWidgetNic">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>130</width>
+       <height>130</height>
+      </rect>
+     </property>
+     <property name="indentation">
+      <number>0</number>
+     </property>
+     <property name="itemsExpandable">
+      <bool>false</bool>
+     </property>
+     <attribute name="headerCascadingSectionResizes">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="headerMinimumSectionSize">
+      <number>30</number>
+     </attribute>
+     <attribute name="headerDefaultSectionSize">
+      <number>60</number>
+     </attribute>
+     <column>
+      <property name="text">
+       <string notr="true">1</string>
+      </property>
+     </column>
+    </widget>
+   </widget>
   </widget>
  </widget>
  <customwidgets>
@@ -455,6 +523,16 @@ Press      :确认
    <class>WidgetMountBlock</class>
    <extends>QWidget</extends>
    <header>widgetmountblock.h</header>
+  </customwidget>
+  <customwidget>
+   <class>WidgetSelectNic</class>
+   <extends>QWidget</extends>
+   <header>widgetselectnic.h</header>
+  </customwidget>
+  <customwidget>
+   <class>WidgetGetPassword</class>
+   <extends>QWidget</extends>
+   <header>widgetgetpassword.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -32,13 +32,41 @@ public:
     {
         return commandTimeoutMs;
     }
-
+    const QString & getIdVendor()
+    {
+        return idVendor;
+    }
+    const QString & getIdProduct()
+    {
+        return idProduct;
+    }
+    const QString & getBcdDevice()
+    {
+        return bcdDevice;
+    }
+    const QString & getIManufacturer()
+    {
+        return iManufacturer;
+    }
+    const QString & getIProduct()
+    {
+        return iProduct;
+    }
+    const QString & getISerialNumber()
+    {
+        return iSerialNumber;
+    }
 private:
-
     QString sourcePartation;
     QString iconFolder;
     QString mountRoot;
     int     commandTimeoutMs;
+    QString idVendor;
+    QString idProduct;
+    QString bcdDevice;
+    QString iManufacturer;
+    QString iProduct;
+    QString iSerialNumber;
 signals:
 };
 

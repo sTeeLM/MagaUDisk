@@ -30,9 +30,10 @@ void ThreadListImage::run()
     listImage->clear();
 
     QString path = app->config.getMountRoot();
-    if(listPath != tr("/")) {
-        path += tr("/") + listPath;
+    if(path.right(1) == tr("/")) {
+        path.chop(1);
     }
+    path += listPath;
     qDebug() << tr("ThreadListImage::run list path is %1").arg(path);
 
     QDir dir(path);

@@ -1,22 +1,21 @@
-#include "widgetselectimage.h"
+#include "widgetselectnic.h"
 
 #include <QDebug>
 #include <QScrollBar>
-#include <QListWidget>
+#include <QTreeWidget>
 #include <QKeyEvent>
 
-WidgetSelectImage::WidgetSelectImage(QWidget *parent)
-    : QWidget(parent)
-    , currentPath(tr("/"))
+WidgetSelectNic::WidgetSelectNic(QWidget *parent)
+    : QWidget{parent}
 {
 
 }
 
-void WidgetSelectImage::keyPressEvent(QKeyEvent *event)
+void WidgetSelectNic::keyPressEvent(QKeyEvent *event)
 {
-    qDebug() << tr("WidgetSelectImage::keyPressEvent");
+    qDebug() << tr("WidgetSelectNic::keyPressEvent");
     if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right) {
-        QScrollBar * bar = findChild<QListWidget *>("listWidgetImage")->horizontalScrollBar();
+        QScrollBar * bar = findChild<QTreeWidget *>("treeWidgetNic")->horizontalScrollBar();
         if(bar) {
             int curValue = bar->value();
             int minValue = bar->minimum();

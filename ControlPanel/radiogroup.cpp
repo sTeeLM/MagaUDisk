@@ -41,5 +41,6 @@ void RadioGroup::InitilizeButtonGroup()
     mainFunctionGroup.addButton(findChild<QRadioButton *>("radioButtonMountSerial"), 2);
     mainFunctionGroup.addButton(findChild<QRadioButton *>("radioButtonMountNic"), 3);
     mainFunctionGroup.addButton(findChild<QRadioButton *>("radioButtonChangePassword"), 4);
+    mainFunctionGroup.addButton(findChild<QRadioButton *>("radioButtonClean"), 5);
     mainFunctionGroup.setExclusive(true);
 }

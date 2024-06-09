@@ -93,9 +93,8 @@ bool ProcessCommander::ReadAppend(int fd, QByteArray & strList)
     ssize_t ret = -1;
     bool retVal = false;
     do {
-        ret = ::read(fd, buffer, sizeof(buffer) - 1);
+        ret = ::read(fd, buffer, sizeof(buffer));
         if(ret > 0) {
-            buffer[ret] = 0;
             strList.append(buffer, ret);
             retVal = true;
         }

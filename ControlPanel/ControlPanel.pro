@@ -14,6 +14,7 @@ SOURCES += \
     controlpanelconfig.cpp \
     main.cpp \
     mainwindow.cpp \
+    nicitem.cpp \
     passwordedit.cpp \
     processcommander.cpp \
     radiogroup.cpp \
@@ -22,20 +23,24 @@ SOURCES += \
     threadblockbase.cpp \
     threadchangepassword.cpp \
     threadlistimage.cpp \
+    threadlistnic.cpp \
     threadmountimage.cpp \
     threadmountnic.cpp \
     threadmountpartation.cpp \
     threadmountserial.cpp \
     threadpreparedevice.cpp \
     widgetchangepassword.cpp \
+    widgetgetpassword.cpp \
     widgetmountblock.cpp \
     widgetresult.cpp \
-    widgetselectimage.cpp
+    widgetselectimage.cpp \
+    widgetselectnic.cpp
 
 HEADERS += \
     controlpanelapplication.h \
     controlpanelconfig.h \
     mainwindow.h \
+    nicitem.h \
     passwordedit.h \
     processcommander.h \
     radiogroup.h \
@@ -44,15 +49,18 @@ HEADERS += \
     threadblockbase.h \
     threadchangepassword.h \
     threadlistimage.h \
+    threadlistnic.h \
     threadmountimage.h \
     threadmountnic.h \
     threadmountpartation.h \
     threadmountserial.h \
     threadpreparedevice.h \
     widgetchangepassword.h \
+    widgetgetpassword.h \
     widgetmountblock.h \
     widgetresult.h \
-    widgetselectimage.h
+    widgetselectimage.h \
+    widgetselectnic.h
 
 FORMS += \
     mainwindow.ui
