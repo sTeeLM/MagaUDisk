@@ -1,0 +1,1 @@
+vga=0x8282 console=serial0,115200 console=tty1 initcall_blacklist=bcm2708_fb_init root=PARTUUID=1434d07c-02 rootfstype=ext4 fsck.repair=yes rootwait quiet splash cfg80211.ieee80211_regdom=CN

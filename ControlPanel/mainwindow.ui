@@ -43,14 +43,14 @@
    </property>
    <widget class="RadioGroup" name="widgetMain" native="true">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>130</width>
-      <height>130</height>
+      <width>0</width>
+      <height>0</height>
      </rect>
     </property>
     <property name="focusPolicy">
@@ -176,6 +176,19 @@
     <property name="focusPolicy">
      <enum>Qt::StrongFocus</enum>
     </property>
+    <widget class="QLabel" name="labelSerialInfo">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>40</y>
+       <width>91</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>串口连接成功</string>
+     </property>
+    </widget>
    </widget>
    <widget class="WidgetSelectImage" name="widgetSelectImage" native="true">
     <property name="enabled">
@@ -202,10 +215,10 @@
       </rect>
      </property>
      <property name="verticalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOff</enum>
+      <enum>Qt::ScrollBarAsNeeded</enum>
      </property>
      <property name="horizontalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOff</enum>
+      <enum>Qt::ScrollBarAsNeeded</enum>
      </property>
      <property name="showDropIndicator" stdset="0">
       <bool>false</bool>
@@ -239,40 +252,50 @@
     <property name="focusPolicy">
      <enum>Qt::StrongFocus</enum>
     </property>
+    <widget class="QLabel" name="labelNicInfo">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>网卡连接成功</string>
+     </property>
+    </widget>
    </widget>
    <widget class="WidgetGetPassword" name="widgetGetPass" native="true">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>0</width>
-      <height>0</height>
+      <width>130</width>
+      <height>130</height>
      </rect>
     </property>
     <widget class="PasswordEdit" name="lineEditPassword" native="true">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>30</y>
-       <width>101</width>
-       <height>21</height>
+       <y>25</y>
+       <width>100</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="contextMenuPolicy">
       <enum>Qt::NoContextMenu</enum>
-     </property>
-     <property name="maxLength" stdset="0">
-      <number>8</number>
      </property>
     </widget>
     <widget class="QLabel" name="labelPassword">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>5</y>
        <width>58</width>
        <height>16</height>
       </rect>
@@ -285,16 +308,17 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>60</y>
-       <width>111</width>
-       <height>61</height>
+       <y>42</y>
+       <width>110</width>
+       <height>81</height>
       </rect>
      </property>
      <property name="text">
-      <string>K1/K2/K3:a/b/c
-方向左    :回退
-Press      :确认
-</string>
+      <string>回退: 方向左
+确认: Press
+K1: 上一字符
+K2: 右移
+K3:下一字符</string>
      </property>
     </widget>
    </widget>
@@ -445,6 +469,12 @@ Press      :确认
      </property>
      <property name="text">
       <string>TextLabel</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::PlainText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
      </property>
     </widget>
    </widget>

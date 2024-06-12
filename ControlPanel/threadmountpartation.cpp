@@ -24,21 +24,21 @@ void ThreadMountPartation::run()
         if(isMount()) {
             /* umount mount root */
             args.clear();
-            args.append(tr("/dev/mapper/ControlPanel"));
-            if(!process.oneShot(tr("/usr/bin/umount"),args)) {
-                setState(SYSTEM_ERROR, QString::fromLocal8Bit(process.getStderr()));
+            args.append("/dev/mapper/ControlPanel");
+            if(!process.oneShot("/usr/bin/umount",args)) {
+                setState(MOUNT_PART_FAILED, QString::fromLocal8Bit(process.getStderr()));
                 break;
             }
             process.clean();
 
             /* get block info */
             args.clear();
-            args.append(tr("-o"));
-            args.append(tr("export"));
-            args.append(tr("-p"));
-            args.append(tr("/dev/mapper/ControlPanel"));
+            args.append("-o");
+            args.append("export");
+            args.append("-p");
+            args.append("/dev/mapper/ControlPanel");
             if(!process.oneShot(tr("/usr/sbin/blkid"),args)) {
-                setState(SYSTEM_ERROR, QString::fromLocal8Bit(process.getStderr()));
+                setState(MOUNT_PART_FAILED, QString::fromLocal8Bit(process.getStderr()));
                 break;
             }
             setBlockInfo(QString::fromLocal8Bit(process.getStdout()));
@@ -46,17 +46,17 @@ void ThreadMountPartation::run()
 
             /* setup usb mass storage */
             args.clear();
-            args.append(tr("g_mass_storage"));
-            args.append(tr("file=/dev/mapper/ControlPanel"));
-            args.append(tr("removable=1"));
-            args.append(tr("idVendor=%1").arg(app->config.getIdVendor()));
-            args.append(tr("idProduc=%1").arg(app->config.getIdProduct()));
-            args.append(tr("bcdDevice=%1").arg(app->config.getBcdDevice()));
-            args.append(tr("iManufacturer=%1").arg(app->config.getIManufacturer()));
-            args.append(tr("iProduct=%1").arg(app->config.getIProduct()));
-            args.append(tr("iSerialNumber=%1").arg(app->config.getISerialNumber()));
-            if(!process.oneShot(tr("/usr/sbin/modprobe"), args)) {
-                setState(SYSTEM_ERROR, QString::fromLocal8Bit(process.getStderr()));
+            args.append("g_mass_storage");
+            args.append("file=/dev/mapper/ControlPanel");
+            args.append(QString("removable=1"));
+            args.append(QString("idVendor=%1").arg(app->config.getIdVendor()));
+            args.append(QString("idProduct=%1").arg(app->config.getIdProduct()));
+            args.append(QString("bcdDevice=%1").arg(app->config.getBcdDevice()));
+            args.append(QString("iManufacturer=%1").arg(app->config.getIManufacturer()));
+            args.append(QString("iProduct=%1").arg(app->config.getIProduct()));
+            args.append(QString("iSerialNumber=%1").arg(app->config.getISerialNumber()));
+            if(!process.oneShot("/usr/sbin/modprobe", args)) {
+                setState(MOUNT_PART_FAILED, QString::fromLocal8Bit(process.getStderr()));
                 break;
             }
             process.clean();
@@ -64,20 +64,20 @@ void ThreadMountPartation::run()
         } else {
             /* clean usb mass storage */
             args.clear();
-            args.append(tr("g_mass_storage"));
-            if(!process.oneShot(tr("/usr/sbin/rmmod"),args)) {
-                setState(SYSTEM_ERROR, QString::fromLocal8Bit(process.getStderr()));
+            args.append("g_mass_storage");
+            if(!process.oneShot("/usr/sbin/rmmod",args)) {
+                setState(UNMOUNT_PART_FAILED, QString::fromLocal8Bit(process.getStderr()));
                 break;
             }
             process.clean();
             /* mount root */
             args.clear();
-            args.append(tr("-o"));
-            args.append(tr("rw"));
-            args.append(tr("/dev/mapper/ControlPanel"));
+            args.append("-o");
+            args.append("rw");
+            args.append("/dev/mapper/ControlPanel");
             args.append(app->config.getMountRoot());
-            if(!process.oneShot(tr("/usr/bin/mount"),args)) {
-                setState(SYSTEM_ERROR, QString::fromLocal8Bit(process.getStderr()));
+            if(!process.oneShot("/usr/bin/mount",args)) {
+                setState(UNMOUNT_PART_FAILED, QString::fromLocal8Bit(process.getStderr()));
                 break;
             }
             process.clean();

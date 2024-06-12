@@ -20,35 +20,47 @@ void ThreadMountSerial::run()
         if(isMount()) {
             /* setup usb serial */
             args.clear();
-            args.append(tr("g_serial"));
-            args.append(tr("idVendor=%1").arg(app->config.getIdVendor()));
-            args.append(tr("idProduc=%1").arg(app->config.getIdProduct()));
-            args.append(tr("bcdDevice=%1").arg(app->config.getBcdDevice()));
-            args.append(tr("iManufacturer=%1").arg(app->config.getIManufacturer()));
-            args.append(tr("iProduct=%1").arg(app->config.getIProduct()));
-            args.append(tr("iSerialNumber=%1").arg(app->config.getISerialNumber()));
-            if(!process.oneShot(tr("/usr/sbin/modprobe"), args)) {
-                setState(SYSTEM_ERROR, QString::fromLocal8Bit(process.getStderr()));
+            args.append("g_serial");
+            args.append(QString("idVendor=%1").arg(app->config.getIdVendor()));
+            args.append(QString("idProduct=%1").arg(app->config.getIdProduct()));
+            args.append(QString("bcdDevice=%1").arg(app->config.getBcdDevice()));
+            args.append(QString("iManufacturer=%1").arg(app->config.getIManufacturer()));
+            args.append(QString("iProduct=%1").arg(app->config.getIProduct()));
+            args.append(QString("iSerialNumber=%1").arg(app->config.getISerialNumber()));
+            if(!process.oneShot("/usr/sbin/modprobe", args)) {
+                setState(MOUNT_SERIAL_FAILED, QString::fromLocal8Bit(process.getStderr()));
                 break;
             }
             process.clean();
 
+            /* wait serial ready */
+            QThread::sleep(5);
+
             /* restart serial-gtty */
             args.clear();
-            args.append(tr("restart"));
-            args.append(tr("serial-getty@ttyGS0.service"));
-            if(!process.oneShot(tr("/usr/bin/systemctl"), args)) {
-                setState(SYSTEM_ERROR, QString::fromLocal8Bit(process.getStderr()));
+            args.append("restart");
+            args.append("serial-getty@ttyGS0.service");
+            if(!process.oneShot("/usr/bin/systemctl", args)) {
+                setState(MOUNT_SERIAL_FAILED, QString::fromLocal8Bit(process.getStderr()));
                 break;
             }
             process.clean();
             setStateOK();
         } else {
+            /* stop serial-gtty */
+            args.clear();
+            args.append("stop");
+            args.append("serial-getty@ttyGS0.service");
+            if(!process.oneShot("/usr/bin/systemctl", args)) {
+                setState(UNMOUNT_SERIAL_FAILED, QString::fromLocal8Bit(process.getStderr()));
+                break;
+            }
+            process.clean();
             /* clean usb serial */
             args.clear();
-            args.append(tr("g_serial"));
-            if(!process.oneShot(tr("/usr/sbin/rmmod"),args)) {
-                setState(SYSTEM_ERROR, QString::fromLocal8Bit(process.getStderr()));
+            args.append("g_serial");
+            if(!process.oneShot("/usr/sbin/rmmod",args)) {
+                setState(UNMOUNT_SERIAL_FAILED, QString::fromLocal8Bit(process.getStderr()));
                 break;
             }
             process.clean();

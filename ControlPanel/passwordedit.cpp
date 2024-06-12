@@ -43,10 +43,8 @@ void PasswordEdit::keyPressEvent(QKeyEvent * event)
                 strBuffer.replace(strBuffer.size() - 1, 1, QChar(lastChar));
             }
         } else if(event->key() == Qt::Key_B){ /* next char */
-            if(strBuffer.length() < 6) {
-                if(!skip) {
-                    strBuffer += QChar('A');
-                }
+            if(!skip) {
+                strBuffer += QChar('A');
             }
         } else { /* page down a char */
             if(!skip) {

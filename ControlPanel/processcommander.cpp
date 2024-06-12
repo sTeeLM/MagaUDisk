@@ -149,7 +149,7 @@ bool ProcessCommander::oneShot(
     }
 
     if(!envTemp.length()) {
-        envTemp.append(tr("PATH=/bin:/usr/bin:/sbin/usr/sbin"));
+        envTemp.append("PATH=/bin:/usr/bin:/sbin/usr/sbin");
     }
     setProgram(program);
     setEnvironment(envTemp);

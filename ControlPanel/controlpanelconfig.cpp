@@ -7,16 +7,16 @@
 
 ControlPanelConfig::ControlPanelConfig(QObject *parent)
     : QObject(parent)
-    , sourcePartation(tr("/dev/mmcblk0p3"))
-    , iconFolder(tr("/usr/share/ControlPanel/icons"))
-    , mountRoot(tr("/mnt"))
+    , sourcePartation("/dev/mmcblk0p3")
+    , iconFolder("/usr/share/ControlPanel/icons")
+    , mountRoot("/mnt")
     , commandTimeoutMs(30000)
-    , idVendor(tr("0x781"))
-    , idProduct(tr("0x5572"))
-    , bcdDevice(tr("0x011a"))
-    , iManufacturer(tr("Madcat"))
-    , iProduct(tr("Mega UDisk"))
-    , iSerialNumber(tr("198004091200"))
+    , idVendor("0x781")
+    , idProduct("0x5572")
+    , bcdDevice("0x011a")
+    , iManufacturer("Madcat")
+    , iProduct("Mega UDisk")
+    , iSerialNumber("198004091200")
 {
 
 }
@@ -43,35 +43,35 @@ void ControlPanelConfig::loadConfig(const QString & config)
 
         if(jsonDocConfig.isObject()) {
             QJsonObject jsonConfig = jsonDocConfig.object();
-            if(jsonConfig.value(tr("source_partation")).isString()) {
-                sourcePartation = jsonConfig.value(tr("source_partation")).toString();
+            if(jsonConfig.value("source_partation").isString()) {
+                sourcePartation = jsonConfig.value("source_partation").toString();
             }
-            if(jsonConfig.value(tr("icon_folder")).isString()) {
-                iconFolder = jsonConfig.value(tr("icon_folder")).toString();
+            if(jsonConfig.value("icon_folder").isString()) {
+                iconFolder = jsonConfig.value("icon_folder").toString();
             }
-            if(jsonConfig.value(tr("mount_root")).isString()) {
-                mountRoot = jsonConfig.value(tr("mount_root")).toString();
+            if(jsonConfig.value("mount_root").isString()) {
+                mountRoot = jsonConfig.value("mount_root").toString();
             }
-            if(jsonConfig.value(tr("command_timeout_ms")).isDouble()) {
-                commandTimeoutMs = jsonConfig.value(tr("command_timeout_ms")).toInt();
+            if(jsonConfig.value("command_timeout_ms").isDouble()) {
+                commandTimeoutMs = jsonConfig.value("command_timeout_ms").toInt();
             }
-            if(jsonConfig.value(tr("id_vendor")).isString()) {
-                idVendor = jsonConfig.value(tr("id_vendor")).toString();;
+            if(jsonConfig.value("id_vendor").isString()) {
+                idVendor = jsonConfig.value("id_vendor").toString();;
             }
-            if(jsonConfig.value(tr("id_product")).isString()) {
-                idProduct = jsonConfig.value(tr("id_product")).toString();
+            if(jsonConfig.value("id_product").isString()) {
+                idProduct = jsonConfig.value("id_product").toString();
             }
-            if(jsonConfig.value(tr("bcd_device")).isString()) {
-                bcdDevice = jsonConfig.value(tr("bcd_device")).toString();
+            if(jsonConfig.value("bcd_device").isString()) {
+                bcdDevice = jsonConfig.value("bcd_device").toString();
             }
-            if(jsonConfig.value(tr("i_manufacturer")).isString()) {
-                iManufacturer = jsonConfig.value(tr("i_manufacturer")).toString();
+            if(jsonConfig.value("i_manufacturer").isString()) {
+                iManufacturer = jsonConfig.value("i_manufacturer").toString();
             }
-            if(jsonConfig.value(tr("i_product")).isString()) {
-                iProduct = jsonConfig.value(tr("i_product")).toString();
+            if(jsonConfig.value("i_product").isString()) {
+                iProduct = jsonConfig.value("i_product").toString();
             }
-            if(jsonConfig.value(tr("i_serial_number")).isString()) {
-                iSerialNumber = jsonConfig.value(tr("i_serial_number")).toString();
+            if(jsonConfig.value("i_serial_number").isString()) {
+                iSerialNumber = jsonConfig.value("i_serial_number").toString();
             }
         } else {
             qDebug() << tr("config file %s open error!").arg(config);

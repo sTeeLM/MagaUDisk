@@ -7,7 +7,7 @@
 
 WidgetSelectImage::WidgetSelectImage(QWidget *parent)
     : QWidget(parent)
-    , currentPath(tr("/"))
+    , currentPath("/")
 {
 
 }
@@ -21,14 +21,13 @@ void WidgetSelectImage::keyPressEvent(QKeyEvent *event)
             int curValue = bar->value();
             int minValue = bar->minimum();
             int maxValue = bar->maximum();
-            int stepValue = bar->singleStep();
             if(event->key() == Qt::Key_Left) {
-                curValue -= stepValue;
+                curValue -= 5;
                 if(curValue < minValue) {
                     curValue = minValue;
                 }
             } else {
-                curValue += stepValue;
+                curValue += 5;
                 if(curValue > maxValue) {
                     curValue = maxValue;
                 }

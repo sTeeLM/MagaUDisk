@@ -14,7 +14,7 @@ ControlPanelApplication::ControlPanelApplication(int & argc, char ** argv)
         args.append(argv[i]);
     }
     parser.process(args);
-    QString configFilePath = QObject::tr("/etc/ControlPanel.cfg");
+    QString configFilePath = "/etc/ControlPanel.cfg";
 
     if(parser.isSet(opt)) {
         configFilePath =  parser.value(opt);

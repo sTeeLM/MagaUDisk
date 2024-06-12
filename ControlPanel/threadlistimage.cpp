@@ -30,7 +30,7 @@ void ThreadListImage::run()
     listImage->clear();
 
     QString path = app->config.getMountRoot();
-    if(path.right(1) == tr("/")) {
+    if(path.right(1) == QString("/")) {
         path.chop(1);
     }
     path += listPath;
@@ -44,20 +44,20 @@ void ThreadListImage::run()
         QFileInfo fileInfo = list.at(i);
         int type = list.at(i).isDir() ? 0 : 1;
         QString name = list.at(i).fileName();
-        if(name != tr(".")) {
+        if(name != QString(".")) {
             QString iconPath = app->config.getIconFolder();
             if(iconPath.right(1) != QChar('/')) {
-                iconPath += tr("/");
+                iconPath += QString("/");
             }
             if(type == 0) {
-                iconPath += tr("folder.png");
+                iconPath += QString("folder.png");
             } else {
                 if(name.lastIndexOf(".iso", -1, Qt::CaseInsensitive) >= 0) {
-                    iconPath += tr("cdrom.png");
+                    iconPath += QString("cdrom.png");
                 } else if(name.lastIndexOf(".img", -1, Qt::CaseInsensitive) >= 0) {
-                    iconPath += tr("hdd.png");
+                    iconPath += QString("hdd.png");
                 } else {
-                    iconPath += tr("default.png");
+                    iconPath += QString("default.png");
                 }
             }
             QListWidgetItem * item

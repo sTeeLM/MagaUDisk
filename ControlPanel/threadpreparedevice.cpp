@@ -22,18 +22,26 @@ void ThreadPrepareDevice::run()
     QString stderr;
     ControlPanelApplication * app = qobject_cast<ControlPanelApplication *>(qApp);
 
-    envs.append(tr("PATH=/bin:/usr/bin:/sbin/usr/sbin"));
+    envs.append("PATH=/bin:/usr/bin:/sbin/usr/sbin");
 
     if(isMount()) {
         do {
+            /* close vtcon */
+            args.clear();
+            args.append("-c");
+            args.append("echo 0 > /sys/class/vtconsole/vtcon1/bind");
+            process.oneShot("/usr/bin/sh", args);
+            process.clean();
+
             /* umount mount point if nessaery */
-            args.append(tr("/dev/mapper/ControlPanel"));
-            args.append(tr("/proc/mounts"));
-            if(process.oneShot(tr("/usr/bin/grep"), args)) {
+            args.clear();
+            args.append("/dev/mapper/ControlPanel");
+            args.append("/proc/mounts");
+            if(process.oneShot("/usr/bin/grep", args)) {
                 qDebug() << tr("ThreadPrepareDevice::run /dev/mapper/ControlPanel already mounted, try unmount it!");
                 args.clear();
-                args.append(tr("/dev/mapper/ControlPanel"));
-                if(!process.oneShot(tr("/usr/bin/umount"),args)) {
+                args.append("/dev/mapper/ControlPanel");
+                if(!process.oneShot("/usr/bin/umount",args)) {
                     setState(SYSTEM_ERROR, process.getLastError());
                     break;
                 }
@@ -41,13 +49,13 @@ void ThreadPrepareDevice::run()
             process.clean();
 
             args.clear();
-            args.append(tr("/dev/mapper/ControlPanel"));
-            if(process.oneShot(tr("/bin/ls"), args)) {
+            args.append("/dev/mapper/ControlPanel");
+            if(process.oneShot("/bin/ls", args)) {
                 qDebug() << tr("ThreadPrepareDevice::run /dev/mapper/ControlPanel exist, try close it!");
                 args.clear();
-                args.append(tr("close"));
-                args.append(tr("ControlPanel"));
-                if(!process.oneShot(tr("/usr/sbin/cryptsetup"), args)) {
+                args.append("close");
+                args.append("ControlPanel");
+                if(!process.oneShot("/usr/sbin/cryptsetup", args)) {
                     setState(SYSTEM_ERROR, process.getLastError());
                     break;
                 }
@@ -55,11 +63,11 @@ void ThreadPrepareDevice::run()
             process.clean();
 
             /* open device with password */
-            process.setProgram(tr("/usr/sbin/cryptsetup"));
+            process.setProgram("/usr/sbin/cryptsetup");
             args.clear();
-            args.append(tr("open"));
+            args.append("open");
             args.append(app->config.getSourcePartation());
-            args.append(tr("ControlPanel"));
+            args.append("ControlPanel");
             process.setArguments(args);
             process.setEnvironment(envs);
             if(!process.start()) {
@@ -68,7 +76,7 @@ void ThreadPrepareDevice::run()
             }
 
             process.writeStdin(strPassword.append("\n").toLocal8Bit());
-            stderr = tr("No key available with this passphrase\\.\\n$");
+            stderr = "No key available with this passphrase\\.\\n$";
             retVal = process.waitForConditions({}, stderr, WAIT_MASK_STDERR|WAIT_MASK_STATUS,
                                                app->config.getCommandTimeoutMs());
 
@@ -85,11 +93,11 @@ void ThreadPrepareDevice::run()
 
             /* mount it to mount_root */
             args.clear();
-            args.append(tr("-o"));
-            args.append(tr("rw"));
-            args.append(tr("/dev/mapper/ControlPanel"));
+            args.append("-o");
+            args.append("rw");
+            args.append("/dev/mapper/ControlPanel");
             args.append(app->config.getMountRoot());
-            if(process.oneShot(tr("/usr/bin/mount"),args)) {
+            if(process.oneShot("/usr/bin/mount",args)) {
                 setStateOK();
                 break;
             } else {
@@ -102,18 +110,18 @@ void ThreadPrepareDevice::run()
         do {
             /* unmount */
             args.clear();
-            args.append(tr("/dev/mapper/ControlPanel"));
+            args.append("/dev/mapper/ControlPanel");
             process.setArguments(args);
-            if(!process.oneShot(tr("/usr/bin/umount"), args)) {
+            if(!process.oneShot("/usr/bin/umount", args)) {
                 setState(SYSTEM_ERROR, process.getLastError());
                 break;
             }
             /* close device */
             args.clear();
-            args.append(tr("close"));
-            args.append(tr("/dev/mapper/ControlPanel"));
+            args.append("close");
+            args.append("/dev/mapper/ControlPanel");
             process.setArguments(args);
-            if(!process.oneShot(tr("/usr/sbin/cryptsetup"), args)) {
+            if(!process.oneShot("/usr/sbin/cryptsetup", args)) {
                 setState(SYSTEM_ERROR, process.getLastError());
                 break;
             }

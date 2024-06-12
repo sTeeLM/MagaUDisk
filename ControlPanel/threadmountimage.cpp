@@ -22,35 +22,38 @@ void ThreadMountImage::run()
     qDebug() << tr("ThreadMountImage::run list path is %1").arg(fullPath);
     do {
         if(isMount()) {
+            int excode;
             /* get block info */
             args.clear();
-            args.append(tr("-o"));
-            args.append(tr("export"));
-            args.append(tr("-p"));
+            args.append("-o");
+            args.append("export");
+            args.append("-p");
             args.append(fullPath);
-            if(!process.oneShot(tr("/usr/sbin/blkid"),args)) {
-                setState(SYSTEM_ERROR, QString::fromLocal8Bit(process.getStderr()));
-                break;
+            if(!process.oneShot("/usr/sbin/blkid", args, {}, {}, &excode)) {
+                if(excode != 2) {
+                    setState(MOUNT_IMAGE_FAILED, QString::fromLocal8Bit(process.getStderr()));
+                    break;
+                }
             }
             setBlockInfo(QString::fromLocal8Bit(process.getStdout()));
             process.clean();
 
             /* setup usb mass storage */
             args.clear();
-            args.append(tr("g_mass_storage"));
-            args.append(tr("file='%1'").arg(fullPath));
+            args.append("g_mass_storage");
+            args.append(QString("file=%1").arg(fullPath));
             if(fullPath.lastIndexOf(".iso", -1, Qt::CaseInsensitive) >= 0) {
-                args.append(tr("cdrom=1"));
+                args.append("cdrom=1");
             }
-            args.append(tr("removable=1"));
-            args.append(tr("idVendor=%1").arg(app->config.getIdVendor()));
-            args.append(tr("idProduc=%1").arg(app->config.getIdProduct()));
-            args.append(tr("bcdDevice=%1").arg(app->config.getBcdDevice()));
-            args.append(tr("iManufacturer=%1").arg(app->config.getIManufacturer()));
-            args.append(tr("iProduct=%1").arg(app->config.getIProduct()));
-            args.append(tr("iSerialNumber=%1").arg(app->config.getISerialNumber()));
-            if(!process.oneShot(tr("/usr/sbin/modprobe"), args)) {
-                setState(SYSTEM_ERROR, QString::fromLocal8Bit(process.getStderr()));
+            args.append(QString("removable=1"));
+            args.append(QString("idVendor=%1").arg(app->config.getIdVendor()));
+            args.append(QString("idProduct=%1").arg(app->config.getIdProduct()));
+            args.append(QString("bcdDevice=%1").arg(app->config.getBcdDevice()));
+            args.append(QString("iManufacturer=%1").arg(app->config.getIManufacturer()));
+            args.append(QString("iProduct=%1").arg(app->config.getIProduct()));
+            args.append(QString("iSerialNumber=%1").arg(app->config.getISerialNumber()));
+            if(!process.oneShot(QString("/usr/sbin/modprobe"), args)) {
+                setState(MOUNT_IMAGE_FAILED, QString::fromLocal8Bit(process.getStderr()));
                 break;
             }
             process.clean();
@@ -58,9 +61,9 @@ void ThreadMountImage::run()
         } else {
             /* clean usb mass storage */
             args.clear();
-            args.append(tr("g_mass_storage"));
-            if(!process.oneShot(tr("/usr/sbin/rmmod"),args)) {
-                setState(SYSTEM_ERROR, QString::fromLocal8Bit(process.getStderr()));
+            args.append("g_mass_storage");
+            if(!process.oneShot("/usr/sbin/rmmod",args)) {
+                setState(UNMOUNT_IMAGE_FAILED, QString::fromLocal8Bit(process.getStderr()));
                 break;
             }
             process.clean();

@@ -31,18 +31,18 @@ void ThreadListNic::run()
     do {
         /* list bssid/ssid/signal/security */
         args.clear();
-        args.append(tr("-c"));
-        args.append(tr("no"));
-        args.append(tr("-f"));
-        args.append(tr("bssid,ssid,signal,security"));
-        args.append(tr("-e"));
-        args.append(tr("no"));
-        args.append(tr("--terse"));
-        args.append(tr("device"));
-        args.append(tr("wifi"));
-        args.append(tr("list"));
-        envs.append(tr("PATH=/bin:/usr/bin:/sbin/usr/sbin"));
-        envs.append(tr("LANG=zh_CN.UTF-8"));
+        args.append("-c");
+        args.append("no");
+        args.append("-f");
+        args.append("bssid,ssid,signal,security");
+        args.append("-e");
+        args.append("no");
+        args.append("--terse");
+        args.append("device");
+        args.append("wifi");
+        args.append("list");
+        envs.append("PATH=/bin:/usr/bin:/sbin/usr/sbin");
+        envs.append("LANG=zh_CN.UTF-8");
         if(!process.oneShot(tr("/usr/bin/nmcli"), args, envs)) {
             setState(SYSTEM_ERROR, QString::fromLocal8Bit(process.getStderr()));
             break;

@@ -1,0 +1,58 @@
+/dts-v1/; 
+/plugin/; 
+/ { 
+
+	compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+
+	fragment@0 {
+		target-path = "/";
+		__overlay__ {
+			keypad: waveshare_keys {
+				compatible = "gpio-keys";
+				#address-cells = <1>;
+				#size-cells = <0>;
+				#autorepeat;
+				button@6 {
+					label = "JOYSTICK UP";
+					linux,code = <103>;
+					gpios = <&gpio 6 1>;
+				};
+				button@26 {
+					label = "JOYSTICK RIGHT";
+					linux,code = <106>;
+					gpios = <&gpio 26 1>;
+				};
+				button@5 {
+					label = "JOYSTICK LEFT";
+					linux,code = <105>;
+					gpios = <&gpio 5 1>;
+				};
+				button@19 {
+					label = "JOYSTICK DOWN";
+					linux,code = <108>;
+					gpios = <&gpio 19 1>;
+				};
+				button@13 {
+					label = "JOYSTICK PRESS";
+					linux,code = <28>;
+					gpios = <&gpio 13 1>;
+				};
+				button@21 {
+					label = "KEY 1";
+					linux,code = <30>;
+					gpios = <&gpio 21 1>;
+				};
+				button@20 {
+					label = "KEY 2";
+					linux,code = <48>;
+					gpios = <&gpio 20 1>;
+				};
+				button@16 {
+					label = "KEY 3";
+					linux,code = <46>;
+					gpios = <&gpio 16 1>;
+				};
+			};
+		};
+	};
+};

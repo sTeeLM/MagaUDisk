@@ -195,10 +195,10 @@ void MainWindow::prepareDeviceDone()
         showWidegt(WIDGET_MAIN);
     } else {
         showWidegt(WIDGET_RESULT, WIDGET_GET_PASS);
-        ui->lineEditPassword->setText(tr(""));
+        ui->lineEditPassword->setText("");
         ui->widgetGetPass->setPrepare();
-        ui->labelResultTitle->setText(QString(tr("准备分区失败")));
-        ui->labelResultInfo->setText(currentThread->getStateString());
+        ui->labelResultTitle->setText(currentThread->getStateString());
+        ui->labelResultInfo->setText(currentThread->getExtra());
     }
 
     delete currentThread;
@@ -212,11 +212,11 @@ void MainWindow::changePasswordDone()
         showWidegt(WIDGET_MAIN);
     } else {
         showWidegt(WIDGET_RESULT, WIDGET_CHANGE_PASSWORD);
-        ui->lineEditOldPassword->setText(tr(""));
-        ui->lineEditNewPassword->setText(tr(""));
-        ui->lineEditNewPasswordAgain->setText(tr(""));
-        ui->labelResultTitle->setText(QString(tr("修改密码失败")));
-        ui->labelResultInfo->setText(currentThread->getStateString());
+        ui->lineEditOldPassword->setText("");
+        ui->lineEditNewPassword->setText("");
+        ui->lineEditNewPasswordAgain->setText("");
+        ui->labelResultTitle->setText(currentThread->getStateString());
+        ui->labelResultInfo->setText(currentThread->getExtra());
     }
     delete currentThread;
     currentThread = nullptr;
@@ -226,15 +226,15 @@ void MainWindow::clossDeviceDone()
 {
     qDebug()<<tr("MainWindow::clossDeviceDone");
     if(currentThread->isStateOK()) {
-        ui->lineEditPassword->setText(tr(""));
+        ui->lineEditPassword->setText("");
         ui->widgetGetPass->setPrepare();
         showWidegt(WIDGET_GET_PASS);
     } else {
-        ui->lineEditPassword->setText(tr(""));
+        ui->lineEditPassword->setText("");
         ui->widgetGetPass->setPrepare();
         showWidegt(WIDGET_RESULT, WIDGET_GET_PASS);
-        ui->labelResultTitle->setText(QString(tr("关闭失败")));
-        ui->labelResultInfo->setText(currentThread->getStateString());
+        ui->labelResultTitle->setText(currentThread->getStateString());
+        ui->labelResultInfo->setText(currentThread->getExtra());
     }
     delete currentThread;
     currentThread = nullptr;
@@ -253,13 +253,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
 
     /* 在获得密码界面按回车 */
-    if(currentInterface->objectName() == QString(tr("widgetGetPass"))
+    if(currentInterface->objectName() == QString("widgetGetPass")
         && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         WidgetGetPassword * p = qobject_cast<WidgetGetPassword *>(currentInterface);
         if(p->isPrepare()) {
             currentThread = new ThreadPrepareDevice(this, ui->lineEditPassword->text());
             connect(currentThread, &QThread::finished, this, &MainWindow::prepareDeviceDone);
-            ui->labelWaitInfo->setText(tr("正在准备分区"));
+            ui->labelWaitInfo->setText("正在准备分区");
             showWidegt(WIDGET_WAIT);
             currentThread->start();
         } else {
@@ -267,13 +267,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
                 NicItem * item = static_cast<NicItem *>(ui->treeWidgetNic->selectedItems().at(0));
                 currentThread = new ThreadMountNic(this, true, item, ui->lineEditPassword->text());
                 connect(currentThread, &QThread::finished, this, &MainWindow::mountNicDone);
-                ui->labelWaitInfo->setText(tr("正在链接网卡"));
+                ui->labelWaitInfo->setText("正在链接网卡");
                 showWidegt(WIDGET_WAIT);
                 currentThread->start();
             }
         }
     /* 在主界面选择功能 */
-    } else if(currentInterface->objectName() == QString(tr("widgetMain"))
+    } else if(currentInterface->objectName() == QString("widgetMain")
         && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         RadioGroup * buttonGroup = qobject_cast<RadioGroup *>(ui->widgetMain);
         switch(buttonGroup->mainFunctionGroup.checkedId()) {
@@ -306,20 +306,20 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             currentThread->start();
             break;
         case 4: /* 修改密码 */
-            ui->lineEditOldPassword->setText(tr(""));
-            ui->lineEditNewPassword->setText(tr(""));
-            ui->lineEditNewPasswordAgain->setText(tr(""));
+            ui->lineEditOldPassword->setText("");
+            ui->lineEditNewPassword->setText("");
+            ui->lineEditNewPasswordAgain->setText("");
             showWidegt(WIDGET_CHANGE_PASSWORD);
             break;
         case 5: /* 关闭设备 */
             currentThread = new ThreadPrepareDevice(this, {}, false);
             connect(currentThread, &QThread::finished, this, &MainWindow::clossDeviceDone);
-            ui->labelWaitInfo->setText(tr("正在关闭设备"));
+            ui->labelWaitInfo->setText("正在关闭设备");
             showWidegt(WIDGET_WAIT);
             currentThread->start();
         }
     /* 在连接串口界面关闭串口 */
-    } else if(currentInterface->objectName() == QString(tr("widgetMountSerial"))
+    } else if(currentInterface->objectName() == QString("widgetMountSerial")
         && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         currentThread = new ThreadMountSerial(this, false);
         ui->labelWaitInfo->setText("正在关闭串口");
@@ -327,7 +327,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         connect(currentThread, &QThread::finished, this, &MainWindow::mountSerialDone);
         currentThread->start();
     /* 在装载整分区界面/装载单个镜像界面关闭镜像 */
-    } else if(currentInterface->objectName() == QString(tr("widgetMountBlock"))
+    } else if(currentInterface->objectName() == QString("widgetMountBlock")
         && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         if(ui->widgetMountBlock->getMountImage()) {
             currentThread = new ThreadMountImage(this, false);
@@ -343,7 +343,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             currentThread->start();
         }
     /* 在模拟网卡界面关闭网卡 */
-    } else if(currentInterface->objectName() == QString(tr("widgetMountNic"))
+    } else if(currentInterface->objectName() == QString("widgetMountNic")
         && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         currentThread = new ThreadMountNic(this, false);
         ui->labelWaitInfo->setText("正在关闭网卡");
@@ -353,7 +353,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         currentThread->start();
 
     /* 在选择镜像界面选择一个item */
-    } else if((currentInterface->objectName() == QString(tr("widgetSelectImage")))
+    } else if((currentInterface->objectName() == QString("widgetSelectImage"))
               && (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)) {
         QListWidgetItem * item = nullptr;
         if(ui->listWidgetImage->selectedItems().length()) {
@@ -362,13 +362,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         QString currentPath = ui->widgetSelectImage->getCurrentPath();
         if(item && item->type() == 0) { // is an folder
             QString currentPath;
-            if(item->text() != tr("..")) {
+            if(item->text() != QString("..")) {
                 currentPath = ui->widgetSelectImage->pushPath(item->text());
             } else {
-                if(ui->widgetSelectImage->getCurrentPath() != tr("/")) {
+                if(ui->widgetSelectImage->getCurrentPath() != QString("/")) {
                     currentPath = ui->widgetSelectImage->popPath();
                 } else {
-                    currentPath = tr("");
+                    currentPath = "";
                 }
             }
             if(currentPath.length()) {
@@ -382,7 +382,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             }
         } else if(item && item->type() == 1) { // is a image
             if(currentPath.right(1) != QChar('/')) {
-                currentPath += tr("/");
+                currentPath += "/";
             }
             currentPath += item->text();
             currentThread = new ThreadMountImage(this, true, currentPath);
@@ -392,24 +392,24 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             currentThread->start();
         }
      /* 选择链接一个WIFI */
-    } else if((currentInterface->objectName() == QString(tr("widgetSelectNic")))
+    } else if((currentInterface->objectName() == QString("widgetSelectNic"))
               && (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)) {
         ui->widgetGetPass->setPrepare(false);
-        ui->lineEditPassword->setText(tr(""));
+        ui->lineEditPassword->setText("");
         showWidegt(WIDGET_GET_PASS);
     /* 在修改密码界面按回车 */
-    } else if(currentInterface->objectName() == QString(tr("widgetChangePassword"))
+    } else if(currentInterface->objectName() == QString("widgetChangePassword")
         && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         currentThread = new ThreadChangePassword(this,
                                                  ui->lineEditOldPassword->text(),
                                                  ui->lineEditNewPassword->text(),
                                                  ui->lineEditNewPasswordAgain->text());
-        ui->labelWaitInfo->setText(tr("正在修改密码"));
+        ui->labelWaitInfo->setText("正在修改密码");
         showWidegt(WIDGET_WAIT);
         connect(currentThread, &QThread::finished, this, &MainWindow::changePasswordDone);
         currentThread->start();
     /* 在结果界面按下回车 */
-    } else if(currentInterface->objectName() == QString(tr("widgetResult"))
+    } else if(currentInterface->objectName() == QString("widgetResult")
         && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         WidgetResult * res = qobject_cast<WidgetResult *>(currentInterface);
         showWidegt(res->getJumpWidget());
@@ -440,10 +440,10 @@ void MainWindow::initilizeUI()
 
     ui->treeWidgetNic->setColumnCount(3);
     QStringList lst;
-    lst.append(tr("SSID"));
-    lst.append(tr("信号"));
-    lst.append(tr("安全"));
-    lst.append(tr("BSSID"));
+    lst.append("SSID");
+    lst.append("信号");
+    lst.append("安全");
+    lst.append("BSSID");
     ui->treeWidgetNic->setHeaderLabels(lst);
 
     ui->listWidgetImage->setViewMode(QListView::ListMode);
