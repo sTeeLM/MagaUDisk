@@ -7,7 +7,7 @@
    不需要介绍，可以插在电脑上当U盘使
 3. 对U盘上的镜像模拟成移动硬盘和光驱
    将镜像复制到U盘上之后，可以对每一个镜像模拟成移动硬盘和光驱，这就解决了Ventoy的所有兼容性问题
-   当让也可以dd一个空文件，模拟为移动硬盘，然后在上面以常规手段做启动盘（用工具从ISO写U盘）
+   当然也可以dd一个空文件，模拟为移动硬盘，然后在上面以常规手段做启动盘（用工具从ISO写U盘）
 5. 模拟网卡
    对于没有无线网卡的笔记本（例如暂时还没装驱动），可以模拟成一个无线网卡，可以先上网再装驱动。。
 6. 模拟一个外接计算设备
@@ -17,10 +17,10 @@
 1. [waveshare的显示屏](https://www.waveshare.net/shop/1.3inch-LCD-HAT.htm)
 2. [zero w USB扩展板](https://www.1688.com/huo/detail-678778501887.html?spm=a262i4.9164788.zhaohuo-list-offerlist.7.db0c6712fqvtJX)
 
-## 没做的很好的
-1. 实现比较糙，直接在Pi Zero W上搞了，本来是想自己用STM单片机做一个的
-2. 由于是linux，启动很慢
-3. 软件用QT写的，边学边写，很糙
+## 其他
+1. 实现的比较简单，直接在Pi Zero W上搞了，本来是想自己用STM单片机做一个的，但是在高速USB上暂时碰到了些困难
+2. 由于是linux，启动比较慢，需要等一等
+3. 软件用QT写的，边学边写，有点儿糙
 
 ## 完成状态
 ![pic](https://github.com/sTeeLM/MegaUDisk/blob/main/pics/cover.jpg)
@@ -31,10 +31,10 @@ that uses hardware rather than software simulation, similar to Ventoy, but much 
 1. Encryption:
    Encrypt the storage media so there is no risk if lost.
 2. Simulate ordinary USB flash drive:
-   No introduction is needed, you can plug it into your computer and use it as a USB flash drive
+   You can plug it into your computer and use it as a USB flash drive
 3. Simulate the image on the USB flash drive into a mobile hard disk and optical drive
-   After copying the image to a USB flash drive, each image can be simulated as a mobile hard disk and optical drive.
+   After copying the image to a USB flash drive, each image can be simulated as a mobile hard disk or optical drive.
 4. Simulate network card
-   For laptops without a wireless network card (for example, no driver installed), you can simulate a wireless network card.
+   For laptops without a wireless network card (for example, no driver installed yet), you can simulate a wireless network card.
 6. Simulate an external computing device
    You can log in through ssh or serial
