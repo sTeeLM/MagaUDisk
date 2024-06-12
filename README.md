@@ -11,7 +11,7 @@
 5. 模拟网卡
    对于没有无线网卡的笔记本（例如暂时还没装驱动），可以模拟成一个无线网卡，可以先上网再装驱动。。
 6. 模拟一个外接计算设备
-   可以通过ssh或者serial登录
+   可以通过ssh或者serial登录，这个功能就是用来修设备的。。。
 
 ## 硬件
 1. [waveshare的显示屏](https://www.waveshare.net/shop/1.3inch-LCD-HAT.htm)
@@ -26,6 +26,7 @@
 ![pic](https://github.com/sTeeLM/MegaUDisk/blob/main/pics/cover.jpg)
 ![pic](https://github.com/sTeeLM/MegaUDisk/blob/main/pics/pic1.jpg)
 ![pic](https://github.com/sTeeLM/MegaUDisk/blob/main/pics/pic2.jpg)
+
 ## A universal boot disk 
 that uses hardware rather than software simulation, similar to Ventoy, but much more powerful!
 1. Encryption:
