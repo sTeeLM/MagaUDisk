@@ -13,6 +13,10 @@
 6. 模拟一个外接计算设备
    可以通过ssh或者serial登录
 
+## 硬件
+1. [waveshare的显示屏](https://www.waveshare.net/shop/1.3inch-LCD-HAT.htm)
+2. [zero w USB扩展板](https://www.1688.com/huo/detail-678778501887.html?spm=a262i4.9164788.zhaohuo-list-offerlist.7.db0c6712fqvtJX)
+
 ## 没做的很好的
 1. 实现比较糙，直接在Pi Zero W上搞了，本来是想自己用STM单片机做一个的
 2. 由于是linux，启动很慢
