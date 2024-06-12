@@ -17,7 +17,8 @@
 3. 软件用QT写的，边学边写，很糙
 
 
-# A universal boot disk that uses hardware rather than software simulation, similar to Ventoy, but much more powerful!
+## A universal boot disk 
+that uses hardware rather than software simulation, similar to Ventoy, but much more powerful!
 1. Encryption:
    Encrypt the storage media so there is no risk if lost.
 2. Simulate ordinary USB flash drive:
