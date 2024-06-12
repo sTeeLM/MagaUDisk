@@ -16,6 +16,9 @@
 2. 由于是linux，启动很慢
 3. 软件用QT写的，边学边写，很糙
 
+## 完成状态
+![pic](https://github.com/sTeeLM/MegaUDisk/blob/main/pics/cover.jpg)
+
 
 ## A universal boot disk 
 that uses hardware rather than software simulation, similar to Ventoy, but much more powerful!
