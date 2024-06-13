@@ -37,6 +37,7 @@ dtparam=height=130
 dtparam=rotate=90
 dtparam=fps=60
 dtparam=speed=40000000
+drparam=bgr=1
 
 # Don't have the firmware create an initial video= setting in cmdline.txt.
 # Use the kernel's default instead.

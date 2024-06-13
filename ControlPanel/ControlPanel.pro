@@ -16,6 +16,7 @@ SOURCES += \
     mainwindow.cpp \
     nicitem.cpp \
     passwordedit.cpp \
+    pidfile.cpp \
     processcommander.cpp \
     radiogroup.cpp \
     statethreadbase.cpp \
@@ -42,6 +43,7 @@ HEADERS += \
     mainwindow.h \
     nicitem.h \
     passwordedit.h \
+    pidfile.h \
     processcommander.h \
     radiogroup.h \
     statethreadbase.h \

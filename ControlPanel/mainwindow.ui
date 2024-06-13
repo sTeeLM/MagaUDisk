@@ -43,14 +43,14 @@
    </property>
    <widget class="RadioGroup" name="widgetMain" native="true">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>0</width>
-      <height>0</height>
+      <width>130</width>
+      <height>130</height>
      </rect>
     </property>
     <property name="focusPolicy">
@@ -60,7 +60,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>0</y>
+       <y>5</y>
        <width>121</width>
        <height>20</height>
       </rect>
@@ -73,7 +73,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>20</y>
+       <y>25</y>
        <width>121</width>
        <height>20</height>
       </rect>
@@ -86,7 +86,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>40</y>
+       <y>45</y>
        <width>121</width>
        <height>20</height>
       </rect>
@@ -99,7 +99,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>60</y>
+       <y>65</y>
        <width>121</width>
        <height>20</height>
       </rect>
@@ -112,7 +112,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>80</y>
+       <y>85</y>
        <width>121</width>
        <height>20</height>
       </rect>
@@ -125,7 +125,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>100</y>
+       <y>105</y>
        <width>121</width>
        <height>20</height>
       </rect>
@@ -268,14 +268,14 @@
    </widget>
    <widget class="WidgetGetPassword" name="widgetGetPass" native="true">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>130</width>
-      <height>130</height>
+      <width>0</width>
+      <height>0</height>
      </rect>
     </property>
     <widget class="PasswordEdit" name="lineEditPassword" native="true">
@@ -316,9 +316,12 @@
      <property name="text">
       <string>回退: 方向左
 确认: Press
-K1: 上一字符
-K2: 右移
-K3:下一字符</string>
+上一字符: K1
+右移一位: K2
+下一字符: K3</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::PlainText</enum>
      </property>
     </widget>
    </widget>

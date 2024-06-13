@@ -26,13 +26,6 @@ void ThreadPrepareDevice::run()
 
     if(isMount()) {
         do {
-            /* close vtcon */
-            args.clear();
-            args.append("-c");
-            args.append("echo 0 > /sys/class/vtconsole/vtcon1/bind");
-            process.oneShot("/usr/bin/sh", args);
-            process.clean();
-
             /* umount mount point if nessaery */
             args.clear();
             args.append("/dev/mapper/ControlPanel");

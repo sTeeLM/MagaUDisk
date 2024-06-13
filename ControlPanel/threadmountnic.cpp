@@ -105,6 +105,19 @@ void ThreadMountNic::run()
             args.append("down");
             args.append("usb0");
             if(!process.oneShot("/usr/bin/nmcli", args, envs)) {
+                qDebug() << tr("down usb0 failed");
+                setState(UNMOUNT_NIC_FAILED, process.getLastError());
+                break;
+            }
+            process.clean();
+
+            /* down wifi */
+            args.clear();
+            args.append("connection");
+            args.append("down");
+            args.append("ControlPanel");
+            if(!process.oneShot("/usr/bin/nmcli", args, envs)) {
+                qDebug() << tr("down wifi failed");
                 setState(UNMOUNT_NIC_FAILED, process.getLastError());
                 break;
             }
@@ -114,10 +127,24 @@ void ThreadMountNic::run()
             args.clear();
             args.append("g_ether");
             if(!process.oneShot("/usr/sbin/rmmod", args)) {
+                qDebug() << tr("remove usb0 failed");
                 setState(UNMOUNT_NIC_FAILED, QString::fromLocal8Bit(process.getStderr()));
                 break;
             }
             process.clean();
+
+            /* remove wifi */
+            args.clear();
+            args.append("connection");
+            args.append("delete");
+            args.append("ControlPanel");
+            if(!process.oneShot("/usr/bin/nmcli", args, envs)) {
+                qDebug() << tr("remove wifi failed");
+                setState(UNMOUNT_NIC_FAILED, process.getLastError());
+                break;
+            }
+            process.clean();
+
             setStateOK();
         }
     }while(0);

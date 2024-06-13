@@ -56,6 +56,10 @@ public:
     {
         return iSerialNumber;
     }
+    const QString & getPidFilePath()
+    {
+        return pidFilePath;
+    }
 private:
     QString sourcePartation;
     QString iconFolder;
@@ -67,6 +71,7 @@ private:
     QString iManufacturer;
     QString iProduct;
     QString iSerialNumber;
+    QString pidFilePath;
 signals:
 };
 

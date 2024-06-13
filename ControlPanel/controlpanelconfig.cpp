@@ -17,6 +17,7 @@ ControlPanelConfig::ControlPanelConfig(QObject *parent)
     , iManufacturer("Madcat")
     , iProduct("Mega UDisk")
     , iSerialNumber("198004091200")
+    , pidFilePath("/var/run/ControlPanel.pid")
 {
 
 }
@@ -73,6 +74,9 @@ void ControlPanelConfig::loadConfig(const QString & config)
             if(jsonConfig.value("i_serial_number").isString()) {
                 iSerialNumber = jsonConfig.value("i_serial_number").toString();
             }
+            if(jsonConfig.value("pid_file").isString()) {
+                pidFilePath = jsonConfig.value("pid_file").toString();
+            }
         } else {
             qDebug() << tr("config file %s open error!").arg(config);
         }
@@ -90,5 +94,6 @@ void ControlPanelConfig::loadConfig(const QString & config)
     qDebug() << tr("i_manufacturer: %1").arg(iManufacturer);
     qDebug() << tr("i_product: %1").arg(iProduct);
     qDebug() << tr("i_serial_number: %1").arg(iSerialNumber);
+    qDebug() << tr("pid_file: %1").arg(pidFilePath);
 }
 
